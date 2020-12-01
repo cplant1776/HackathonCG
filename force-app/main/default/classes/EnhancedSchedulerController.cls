@@ -1,6 +1,6 @@
 public with sharing class EnhancedSchedulerController {
     
-    @AuraEnabled
+    @AuraEnabled(cacheable=true)
     public static List<Event> fetchAllEvents(){
         List<Event> eventList = new List<Event>();
         eventList = [Select Id, Subject, WhatId, WhoId, 
@@ -10,7 +10,7 @@ public with sharing class EnhancedSchedulerController {
         return eventList;
     }
 
-    @AuraEnabled
+    @AuraEnabled(cacheable=true)
     public static List<CronTrigger> fetchAllScheduledJobs(){
         List<CronTrigger> jobList = new List<CronTrigger>();
         jobList = [SELECT Id, CronJobDetail.Name, CronJobDetailId, EndTime, NextFireTime, PreviousFireTime, StartTime, State, TimesTriggered

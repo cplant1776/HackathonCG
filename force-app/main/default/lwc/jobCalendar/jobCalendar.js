@@ -8,7 +8,7 @@ export default class JobCalendar extends LightningElement {
     @api scheduledJobs;
 
     fullCalendarJsInitialised = false;
-    allEvents = [];
+    allScheduledJobs = [];
     selectedEvent = undefined;
     /**
      * @description Standard lifecyle method 'renderedCallback'
@@ -17,7 +17,7 @@ export default class JobCalendar extends LightningElement {
      */
     renderedCallback() {
         console.log('START renderedCallback');
-        console.log(scheduledJobs);
+        console.log(JSON.parse(JSON.stringify(this.scheduledJobs)));
         // Performs this operation only on first render
         if (this.fullCalendarJsInitialised) {
         return;
@@ -36,7 +36,7 @@ export default class JobCalendar extends LightningElement {
         ])
         .then(() => {
         // Initialise the calendar configuration
-            this.getAllEvents();
+            this.setAllScheduledJobs();
         })
         .catch(error => {
         // eslint-disable-next-line no-console
@@ -66,7 +66,7 @@ export default class JobCalendar extends LightningElement {
         navLinks: true,
         editable: true,
         eventLimit: true,
-        events: this.allEvents,
+        events: this.allScheduledJobs,
         dragScroll : true,
         droppable: true,
         weekNumbers : true,
@@ -89,38 +89,8 @@ export default class JobCalendar extends LightningElement {
         });
     }
 
-    getAllEvents(){
-        //   fetchAllEvents()
-        //   .then(result => {
-        //     this.allEvents = result.map(item => {
-        //       return {
-        //         id : item.Id,
-        //         editable : true,
-        //         title : item.Subject,
-        //         start : item.ActivityDate,
-        //         end : item.EndDateTime,
-        //         description : item.Description,
-        //         allDay : false,
-        //         extendedProps : {
-        //           whoId : item.WhoId,
-        //           whatId : item.WhatId
-        //         },
-        //         backgroundColor: "rgb(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + ")",
-        //         borderColor: "rgb(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + ")"
-        //       };
-        //     });
-        //     // Initialise the calendar configuration
-        //     this.initialiseFullCalendarJs();
-        //   })
-        //   .catch(error => {
-        //     window.console.log(' Error Occured ', error)
-        //   })
-        //   .finally(()=>{
-        //     //this.initialiseFullCalendarJs();
-        //   })
-        fetchAllScheduledJobs()
-        .then(result => {
-            this.allEvents = result.map(item => {
+    setAllScheduledJobs() {
+        this.allScheduledJobs = this.scheduledJobs.map(item => {
             return {
                 id : item.Id,
                 editable : true,
@@ -139,14 +109,38 @@ export default class JobCalendar extends LightningElement {
             });
             // Initialise the calendar configuration
             this.initialiseFullCalendarJs();
-        })
-        .catch(error => {
-            window.console.log(' Error Occured ', error)
-        })
-        .finally(()=>{
-            //this.initialiseFullCalendarJs();
-        })
     }
+
+    // getAllEvents(){
+    //     fetchAllScheduledJobs()
+    //     .then(result => {
+    //         this.allEvents = result.map(item => {
+    //         return {
+    //             id : item.Id,
+    //             editable : true,
+    //             title : item.CronJobDetail.Name,
+    //             start : item.NextFireTime,
+    //             end : item.NextFireTime,
+    //             description : 'im a description',
+    //             allDay : false,
+    //             // extendedProps : {
+    //             //   whoId : item.WhoId,
+    //             //   whatId : item.WhatId
+    //             // },
+    //             backgroundColor: "rgb(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + ")",
+    //             borderColor: "rgb(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + ")"
+    //         };
+    //         });
+    //         // Initialise the calendar configuration
+    //         this.initialiseFullCalendarJs();
+    //     })
+    //     .catch(error => {
+    //         window.console.log(' Error Occured ', error)
+    //     })
+    //     .finally(()=>{
+    //         //this.initialiseFullCalendarJs();
+    //     })
+    // }
 
     closeModal(){
         this.selectedEvent = undefined;
