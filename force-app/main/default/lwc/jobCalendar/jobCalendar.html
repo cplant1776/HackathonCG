@@ -1,9 +1,12 @@
 <template>
+  <!-- Calendar -->
     <div class="slds-grid">
       <div class="slds-m-around_small">
         <div id="calendar" class="fullcalendarjs"></div>
       </div>
     </div>
+
+    <!-- Modal -->
     <template if:true={selectedEvent}>
       {selectedEvent.title}
     </template>
@@ -19,6 +22,9 @@
               <lightning-card  variant="Narrow"  title="Hello" icon-name="standard:event">
                   <p class="slds-p-horizontal_small">
                     Subject : {selectedEvent.title}
+                  </p>
+                  <p class="slds-p-horizontal_small">
+                    Id : {selectedEvent.id}
                   </p>
                   <p class="slds-p-horizontal_small">
                     StartDate : 
@@ -51,4 +57,5 @@
       </section>
       <div class="slds-backdrop slds-backdrop_open"></div>
     </template>
+
   </template>

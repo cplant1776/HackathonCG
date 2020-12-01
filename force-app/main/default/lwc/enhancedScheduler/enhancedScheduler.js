@@ -18,4 +18,8 @@ export default class EnhancedScheduler extends LightningElement {
             console.log(response.error);
         }
     }
+
+    handleTester() {
+        console.log('caught Tester');
+    }
 }

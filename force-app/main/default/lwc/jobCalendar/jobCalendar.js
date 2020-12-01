@@ -9,7 +9,7 @@ export default class JobCalendar extends LightningElement {
 
     fullCalendarJsInitialised = false;
     allScheduledJobs = [];
-    selectedEvent = undefined;
+    selectedEvent;
     /**
      * @description Standard lifecyle method 'renderedCallback'
      *              Ensures that the page loads and renders the 
@@ -27,23 +27,22 @@ export default class JobCalendar extends LightningElement {
         // Executes all loadScript and loadStyle promises
         // and only resolves them once all promises are done
         Promise.all([
-        loadScript(this, FullCalendarJS + '/jquery.min.js'),
-        loadScript(this, FullCalendarJS + '/moment.min.js'),
-        loadScript(this, FullCalendarJS + '/theme.js'),
-        loadScript(this, FullCalendarJS + '/fullcalendar.min.js'),
-        loadStyle(this, FullCalendarJS + '/fullcalendar.min.css'),
-        // loadStyle(this, FullCalendarJS + '/fullcalendar.print.min.css')
+            loadScript(this, FullCalendarJS + '/jquery.min.js'),
+            loadScript(this, FullCalendarJS + '/moment.min.js'),
+            loadScript(this, FullCalendarJS + '/theme.js'),
+            loadScript(this, FullCalendarJS + '/fullcalendar.min.js'),
+            loadStyle(this, FullCalendarJS + '/fullcalendar.min.css'),
+            // loadStyle(this, FullCalendarJS + '/fullcalendar.print.min.css')
         ])
         .then(() => {
-        // Initialise the calendar configuration
+            // Initialise the calendar configuration
             this.setAllScheduledJobs();
         })
         .catch(error => {
-        // eslint-disable-next-line no-console
-        console.error({
-            message: 'Error occured on rendering FullCalendarJS',
-            error
-        });
+            console.error({
+                message: 'Error occured on rendering FullCalendarJS',
+                error
+            });
         })
     }
 
@@ -53,39 +52,39 @@ export default class JobCalendar extends LightningElement {
      *              This is also where we load the Events data.
      */
     initialiseFullCalendarJs() {
+        var that = this; // used to access class variables in our event callback
         const ele = this.template.querySelector('div.fullcalendarjs');
-        // eslint-disable-next-line no-undef
         $(ele).fullCalendar({
-        header: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'month,basicWeek,basicDay,listWeek'
-        },
-        themeSystem : 'standard',
-        defaultDate: new Date(), 
-        navLinks: true,
-        editable: true,
-        eventLimit: true,
-        events: this.allScheduledJobs,
-        dragScroll : true,
-        droppable: true,
-        weekNumbers : true,
-        eventDrop: function(event, delta, revertFunc) {
-            alert(event.title + " was dropped on " + event.start.format());
-            if (!confirm("Are you sure about this change? ")) {
-            revertFunc();
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,basicWeek,basicDay,listWeek'
+            },
+            themeSystem : 'standard',
+            defaultDate: new Date(), 
+            navLinks: true,
+            editable: true,
+            eventLimit: true,
+            events: this.allScheduledJobs,
+            dragScroll : true,
+            droppable: true,
+            weekNumbers : true,
+            eventDrop: function(event, delta, revertFunc) {
+                alert(event.title + " was dropped on " + event.start.format());
+                if (!confirm("Are you sure about this change? ")) {
+                revertFunc();
+                }
+            },
+            eventClick: function(event, jsEvent, view) {
+                that.selectedEvent =  event;
+                console.log(that.selectedEvent);
+                console.log('END eventClick');
+            },
+            dayClick :function(date, jsEvent, view) {
+                jsEvent.preventDefault();
+            },
+            eventMouseover : function(event, jsEvent, view) {
             }
-        },
-        eventClick: function(event, jsEvent, view) {
-            alert('Event Clicked '+event.title)
-            this.selectedEvent =  event;
-        },
-        dayClick :function(date, jsEvent, view) {
-            jsEvent.preventDefault();
-            
-        },
-        eventMouseover : function(event, jsEvent, view) {
-        }
         });
     }
 
@@ -97,8 +96,9 @@ export default class JobCalendar extends LightningElement {
                 title : item.CronJobDetail.Name,
                 start : item.NextFireTime,
                 end : item.NextFireTime,
-                description : 'im a description',
+                description : 'placeholder description',
                 allDay : false,
+                extendedProps: {},
                 // extendedProps : {
                 //   whoId : item.WhoId,
                 //   whatId : item.WhatId
@@ -110,37 +110,6 @@ export default class JobCalendar extends LightningElement {
             // Initialise the calendar configuration
             this.initialiseFullCalendarJs();
     }
-
-    // getAllEvents(){
-    //     fetchAllScheduledJobs()
-    //     .then(result => {
-    //         this.allEvents = result.map(item => {
-    //         return {
-    //             id : item.Id,
-    //             editable : true,
-    //             title : item.CronJobDetail.Name,
-    //             start : item.NextFireTime,
-    //             end : item.NextFireTime,
-    //             description : 'im a description',
-    //             allDay : false,
-    //             // extendedProps : {
-    //             //   whoId : item.WhoId,
-    //             //   whatId : item.WhatId
-    //             // },
-    //             backgroundColor: "rgb(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + ")",
-    //             borderColor: "rgb(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + ")"
-    //         };
-    //         });
-    //         // Initialise the calendar configuration
-    //         this.initialiseFullCalendarJs();
-    //     })
-    //     .catch(error => {
-    //         window.console.log(' Error Occured ', error)
-    //     })
-    //     .finally(()=>{
-    //         //this.initialiseFullCalendarJs();
-    //     })
-    // }
 
     closeModal(){
         this.selectedEvent = undefined;
