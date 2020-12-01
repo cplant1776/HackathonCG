@@ -19,7 +19,9 @@ export default class EnhancedScheduler extends LightningElement {
         }
     }
 
-    handleTester() {
-        console.log('caught Tester');
+    // Handlers
+
+    handleCreateNewJob() {
+        console.log('EnhancedScheduler :: handleCreateNewJob');
     }
 }

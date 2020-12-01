@@ -89,13 +89,15 @@ export default class JobCalendar extends LightningElement {
     }
 
     setAllScheduledJobs() {
-        this.allScheduledJobs = this.scheduledJobs.map(item => {
+        // TODO: instead of mapping: loop through each job, do an inner loop through runtimes and create an event for each one
+        //      that will also let us assign the same color to them.
+        this.allScheduledJobs = this.scheduledJobs.jobs.map(item => {
             return {
-                id : item.Id,
+                id : item.details.Id,
                 editable : true,
-                title : item.CronJobDetail.Name,
-                start : item.NextFireTime,
-                end : item.NextFireTime,
+                title : item.details.CronJobDetail.Name,
+                start : item.details.NextFireTime,
+                end : item.details.NextFireTime,
                 description : 'placeholder description',
                 allDay : false,
                 extendedProps: {},
