@@ -1,0 +1,7 @@
+<template>
+    <lightning-card title="Hello?">
+        <template if:true={scheduledJobs}>
+            <c-job-calendar scheduled-jobs={scheduledJobs}></c-job-calendar>
+        </template>
+    </lightning-card>
+  </template>

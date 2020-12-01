@@ -1,0 +1,27 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+	 <aura:attribute name="data" type="Object" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="sortDirection" type="String" default="asc" />
+    <aura:attribute name="defaultSortDirection" type="String" default="asc" />
+    <aura:attribute name="sortedBy" type="String" />
+
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    
+    <div class="slds-text-heading--large slds-align_absolute-center">Scheduler App</div>
+    <section class="slds-clearfix">
+  <div class="slds-float--right">
+    <lightning:button variant="brand-outline" label="Add Job" title="Add Job" onclick="{! c.handleClick }" />
+  </div>
+</section>
+    <lightning:datatable
+        keyField="id"
+        columns="{!v.columns }"
+        data="{!v.data}"
+        hideCheckBoxColumn="true"
+        defaultSortDirection="{!v.defaultSortDirection}"
+        sortedDirection="{!v.sortDirection}"
+        sortedBy="{!v.sortedBy}"
+        onsort="{!c.handleSort}">
+    </lightning:datatable>
+    
+</aura:component>
