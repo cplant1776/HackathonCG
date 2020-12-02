@@ -1,13 +1,35 @@
-import { LightningElement } from 'lwc';
+import { api, LightningElement } from 'lwc';
 
 export default class CronBuilder extends LightningElement {
 
     selectedFrequency = 'weekly';
     selectedDaysOfWeek = ['MON'];
-    selectedDayOfMonth = 1;
+    selectedDayOfMonth = '1';
     startDate = this.setInitialStartDate();
     endDate = this.setInitialEndDate();
     startTime = '04:00:00.000Z';
+
+    @api generateCronString() {
+        // sec min hr dayOfMo mon dayOfWk Yr
+        // * = all possible values
+        // ? = "no specific value" ... usable in day of month and day of week fields
+        let [hr, min, sec] = this.startTime.split(":");
+        let cronString;
+        switch(this.selectedFrequency) {
+            case 'weekly':
+                let daysOfWeek = this.selectedDaysOfWeek.join(',');
+                cronString = `0 ${hr} ${min} ? * ${daysOfWeek} *`;
+                console.log('cronString: ' + cronString);
+                return cronString;
+                break;
+            case 'monthly': // TODO: Implement
+                cronString = `0 ${hr} ${min} ? * * *`;
+                console.log('cronString: ' + cronString);
+                return cronString;
+        }
+
+        // let cronString = `0 ${hr} ${min} ? * * *`;
+    }
     
 
     get frequencyOptions() {
@@ -40,7 +62,8 @@ export default class CronBuilder extends LightningElement {
     get monthlySelectorOptions() {
         let result = [];
         for(let i=1; i <= 31; i++) {
-            result.push( {label: i, value: i} );
+            let val = i.toString();
+            result.push( {label: val, value: val} );
         }
         return result;
     }
@@ -90,21 +113,5 @@ export default class CronBuilder extends LightningElement {
         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         var yyyy = today.getFullYear();
         return `${yyyy}-${mm}-${dd}`;
-    }
-
-    generateCronString() {
-        // sec min hr dayOfMo mon dayOfWk Yr
-        // * = all possible values
-        // ? = "no specific value" ... usable in day of month and day of week fields
-        let [hr, min, sec] = this.startTime.split(":");
-        switch(this.selectedFrequency) {
-            case 'weekly':
-                let daysOfWeek = this.selectedDaysOfWeek.join(',');
-                let cronString = `0 ${hr} ${min} ? * ${daysOfWeek} *`;
-                console.log('cronString: ' + cronString);
-                break;
-        }
-
-        // let cronString = `0 ${hr} ${min} ? * * *`;
     }
 }

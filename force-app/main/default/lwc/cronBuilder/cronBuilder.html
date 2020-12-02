@@ -3,7 +3,7 @@
         <lightning-layout multiple-rows="true">
 
             <!-- Row 1 -->
-            <lightning-layout-item size="4">
+            <lightning-layout-item size="4" padding="around-small">
                 <lightning-radio-group name="frequencyRadio"
                         label="Frequency"
                         options={frequencyOptions}
@@ -13,7 +13,7 @@
                 </lightning-radio-group>
             </lightning-layout-item>
 
-            <lightning-layout-item size="8">
+            <lightning-layout-item size="4" padding="around-small">
 
                 <template if:true={showWeeklySelector}>
                     <lightning-checkbox-group name="weeklyGroup"
@@ -35,8 +35,10 @@
                 </template>
             </lightning-layout-item>
 
+            <lightning-layout-item size="4"></lightning-layout-item>
+
             <!-- Row 2 -->
-            <lightning-layout-item size="4">
+            <lightning-layout-item size="4" padding="around-small">
                 <lightning-input type="date"
                     name="startDate"
                     label="Start Date"
@@ -44,10 +46,9 @@
                     onchange={handleStartDateChange}>
                 </lightning-input>
             </lightning-layout-item>
-            <lightning-layout-item size="8"></lightning-layout-item>
 
             <!-- Row 3 -->
-            <lightning-layout-item size="4">
+            <lightning-layout-item size="4" padding="around-small">
                 <lightning-input type="date"
                     name="endDate"
                     label="End Date"
@@ -55,10 +56,10 @@
                     onchange={handleEndDateChange}>
                 </lightning-input>
             </lightning-layout-item>
-            <lightning-layout-item size="8"></lightning-layout-item>
+            <lightning-layout-item size="4"></lightning-layout-item>
 
             <!-- Row 4 -->
-            <lightning-layout-item size="4">
+            <lightning-layout-item size="4" padding="around-small">
                 <lightning-input type="time"
                     name="startTime"
                     label="Start Time"
@@ -66,7 +67,7 @@
                     onchange={handleStartTimeChange}>
                 </lightning-input>
             </lightning-layout-item>
-            <lightning-layout-item size="8"></lightning-layout-item>
+            <!-- <lightning-layout-item size="8"></lightning-layout-item> -->
 
         </lightning-layout>
     </lightning-card>

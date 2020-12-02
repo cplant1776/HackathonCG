@@ -54,10 +54,29 @@ public class scheduledJobs {
     }
      @AuraEnabled
     //Pause a job
-     public static void PasueJob(string jobid){
+     public static void PasueJob(string jobid,string jobName,string className,string CronExpression,string NextFireTime ){
     System.abortJob(jobid);
+         job__C j = new job__C();
+         j.name = jobName;
+         j.className__C = className;
+         j.Cron__C=CronExpression;
+         j.NextFireTime__C=NextFireTime;
+         insert j;
          
      }
+    @AuraEnabled
+    //Resume Job and delete it from the object records
+     public static void ResumeJob(string jobName,string CRON){
+         
+        job__C j = [SELECT id,Name,className__C from job__C WHERE Name=:jobName];
+         
+          Type classType = Type.forName(''+j.className__C+'');
+         schedulable newObj = (schedulable)classType.newInstance();
+       
+        System.schedule(jobName, CRON,newObj );
+         delete j;
+     }
+    @AuraEnabled
      //delete a job
      public static void deleteJob(string jobid){
     System.abortJob(jobid);

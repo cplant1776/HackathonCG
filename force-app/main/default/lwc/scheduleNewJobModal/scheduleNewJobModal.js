@@ -40,5 +40,11 @@ export default class ScheduleNewJobModal extends LightningElement {
         console.log('ScheduleNewJobModal :: handleCloseModal');
         this.dispatchEvent(new CustomEvent('closemodal'));
     }
+
+    handleSubmitNewJob() {
+        console.log('ScheduleNewJobModal :: handleSubmitNewJob');
+        let cronString = this.template.querySelector('c-cron-builder').generateCronString();
+        console.log('Got cron string: ' + cronString);
+    }
     
 }
