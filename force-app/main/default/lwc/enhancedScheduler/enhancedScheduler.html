@@ -12,11 +12,18 @@
         <div class="slds-clearfix">
             <div class="slds-float_right">
                 <lightning-button variant="brand" label="Schedule New" title="Schedule New"
-                                    onclick={handleCreateNewJob} class="slds-m-right_medium"></lightning-button>
+                                    onclick={handleShowCreateModal} class="slds-m-right_medium">
+                </lightning-button>
             </div>
         </div>
 
-        <c-cron-builder></c-cron-builder>
+        <!-- <c-cron-builder></c-cron-builder> -->
 
     </lightning-card>
+
+    <template if:true={showCreateModal}>
+        <c-schedule-new-job-modal
+            onclosemodal={handleCloseCreateModal}>
+        </c-schedule-new-job-modal>        
+    </template>
   </template>

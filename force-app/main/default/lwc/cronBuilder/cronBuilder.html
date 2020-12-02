@@ -2,6 +2,7 @@
     <lightning-card>
         <lightning-layout multiple-rows="true">
 
+            <!-- Row 1 -->
             <lightning-layout-item size="4">
                 <lightning-radio-group name="frequencyRadio"
                         label="Frequency"
@@ -18,7 +19,9 @@
                     <lightning-checkbox-group name="weeklyGroup"
                             label="Recurs every week on"
                             options={weeklySelectorOptions}
-                            onchange={handleWeeklySelectorChange}>
+                            value={selectedDaysOfWeek}
+                            onchange={handleWeeklySelectorChange}
+                            required>
                     </lightning-checkbox-group>
                 </template>
 
@@ -32,6 +35,38 @@
                 </template>
             </lightning-layout-item>
 
+            <!-- Row 2 -->
+            <lightning-layout-item size="4">
+                <lightning-input type="date"
+                    name="startDate"
+                    label="Start Date"
+                    value={startDate}
+                    onchange={handleStartDateChange}>
+                </lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="8"></lightning-layout-item>
+
+            <!-- Row 3 -->
+            <lightning-layout-item size="4">
+                <lightning-input type="date"
+                    name="endDate"
+                    label="End Date"
+                    value={endDate}
+                    onchange={handleEndDateChange}>
+                </lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="8"></lightning-layout-item>
+
+            <!-- Row 4 -->
+            <lightning-layout-item size="4">
+                <lightning-input type="time"
+                    name="startTime"
+                    label="Start Time"
+                    value={startTime}
+                    onchange={handleStartTimeChange}>
+                </lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="8"></lightning-layout-item>
 
         </lightning-layout>
     </lightning-card>
