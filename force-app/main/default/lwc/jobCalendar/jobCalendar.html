@@ -47,6 +47,13 @@
                     description : 
                     {selectedEvent.description}
                   </p>
+
+                  <div class="slds-p-around_medium lgc-bg">
+                   
+                    <lightning-button-icon icon-name="utility:delete"     alternative-text="Delete"    title="Delete" onclick={handleDelete}  ></lightning-button-icon>
+                    <lightning-button-icon icon-name="utility:pause"       alternative-text="Pause"      title="Pause" onclick={handlePause} ></lightning-button-icon>
+                    
+                </div>
               </lightning-card>
               
             </div>

@@ -6,12 +6,15 @@ export default class EnhancedScheduler extends LightningElement {
 
     scheduledJobs;
     showCreateModal = false;
+
+    _scheduledJobs;
     
     @wire(fetchAllScheduledJobs)
     getScheduledJobs(response) {
         if(response.data) {
             console.log('Response from server: ');
             console.log(response.data);
+            this._scheduledJobs = response;
             this.scheduledJobs = response.data;
         }
         if(response.error) {

@@ -3,7 +3,8 @@ import { loadScript, loadStyle } from 'lightning/platformResourceLoader';
 import { NavigationMixin } from 'lightning/navigation';
 
 import FullCalendarJS from '@salesforce/resourceUrl/FullCalendarJS';
-
+import DeleteCurrentJob from '@salesforce/apex/scheduledJobs.deleteJob';
+import PasueJob from '@salesforce/apex/scheduledJobs.PasueJob';
 export default class JobCalendar extends LightningElement {
     @api scheduledJobs;
 
@@ -115,5 +116,21 @@ export default class JobCalendar extends LightningElement {
 
     closeModal(){
         this.selectedEvent = undefined;
+    }
+    handleDelete() {
+
+    console.log("selectedEvent.id");
+    console.log(selectedEvent);
+    
+    DeleteCurrentJob ({jobid:selectedEvent.id})
+     .then(result => {
+        console.log("here");
+        this.closeModal();
+     })
+     .catch(error => {})
+    }
+
+    handlePause(){
+
     }
 }
