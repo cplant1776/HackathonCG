@@ -24,7 +24,7 @@ public class scheduledJobs {
     //get list of all Schedulable classes
     public static List<ApexClass> getclasses(){
         
-      ApexClass[] schedulableClasses = (ApexClass[])[FIND 'implements schedulable' IN ALL FIELDS RETURNING ApexClass(NamespacePrefix, Name)][0];
+      ApexClass[] schedulableClasses = (ApexClass[])[FIND 'Schedulable' IN ALL FIELDS RETURNING ApexClass(NamespacePrefix, Name ORDER BY Name ASC)][0];
       ApexClass[] realSchedulables = new ApexClass[0];
       for(ApexClass klass: schedulableClasses) {
         try {
@@ -44,8 +44,12 @@ public class scheduledJobs {
     
      @AuraEnabled
     //Sched a job
-    public static void scheduleJob(string jobName, string CRON, ApexClass className ){
-        
+    public static void scheduleJob(string jobName, string CRON, String className ){
+      
+        System.debug('jobName: ' + jobName);
+        System.debug('CRON: ' + CRON);
+        System.debug('className: ' + className);
+
         Type classType = Type.forName(''+className+'');
          schedulable newObj = (schedulable)classType.newInstance();
        

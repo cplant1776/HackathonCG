@@ -1,5 +1,7 @@
 import { LightningElement, wire } from 'lwc';
-import getSchedulableClasses from '@salesforce/apex/scheduledJobs.getclasses'
+import { ShowToastEvent } from 'lightning/platformShowToastEvent'
+import getSchedulableClasses from '@salesforce/apex/scheduledJobs.getclasses';
+import scheduleNewJob from '@salesforce/apex/scheduledJobs.scheduleJob';
 
 export default class ScheduleNewJobModal extends LightningElement {
 
@@ -44,7 +46,28 @@ export default class ScheduleNewJobModal extends LightningElement {
     handleSubmitNewJob() {
         console.log('ScheduleNewJobModal :: handleSubmitNewJob');
         let cronString = this.template.querySelector('c-cron-builder').generateCronString();
-        console.log('Got cron string: ' + cronString);
+        let payload = {
+            jobName: this.jobName,
+            CRON: cronString,
+            className: this.selectedClass
+        };
+        console.log(payload);
+        scheduleNewJob(payload)
+        .then(result => {
+            this.dispatchEvent(new ShowToastEvent({
+                title: 'Success',
+                message: 'Your job has been scheduled',
+                varient: 'success'
+            }));
+        })
+        .catch(error => {
+            console.log(error);
+            this.dispatchEvent(new ShowToastEvent({
+                title: 'An Error Occurred',
+                message: 'Error scheduling job: ' + error,
+                varient: 'error'
+            }));
+        })
     }
     
 }

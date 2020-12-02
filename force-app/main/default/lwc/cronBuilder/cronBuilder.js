@@ -13,19 +13,22 @@ export default class CronBuilder extends LightningElement {
         // sec min hr dayOfMo mon dayOfWk Yr
         // * = all possible values
         // ? = "no specific value" ... usable in day of month and day of week fields
-        let [hr, min, sec] = this.startTime.split(":");
+        console.log(this.startTime);
+        let [hr, min, sec] = this.startTime.split(":").map(eachPart => {
+            return parseInt(eachPart).toString(); // trim leading 0s
+        });
         let cronString;
         switch(this.selectedFrequency) {
             case 'weekly':
+                console.log('min: ' + min + '   hr: ' + hr);
                 let daysOfWeek = this.selectedDaysOfWeek.join(',');
-                cronString = `0 ${hr} ${min} ? * ${daysOfWeek} *`;
+                cronString = `0 ${min} ${hr} ? * ${daysOfWeek} *`;
                 console.log('cronString: ' + cronString);
                 return cronString;
                 break;
-            case 'monthly': // TODO: Implement
-                cronString = `0 ${hr} ${min} ? * * *`;
-                console.log('cronString: ' + cronString);
-                return cronString;
+            case 'monthly':
+                // TODO: Implement
+                break;
         }
 
         // let cronString = `0 ${hr} ${min} ? * * *`;
@@ -36,6 +39,7 @@ export default class CronBuilder extends LightningElement {
         return [
             {'label': 'Weekly', 'value': 'weekly'},
             {'label': 'Monthly', 'value': 'monthly'},
+            {'label': 'Single', 'value': 'single'},
         ];
     }
 
