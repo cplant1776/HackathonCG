@@ -81,7 +81,7 @@ export default class JobCalendar extends LightningElement {
                 console.log('END eventClick');
             },
             dayClick :function(date, jsEvent, view) {
-                jsEvent.preventDefault();
+                // jsEvent.preventDefault(); // by default, goes to Day view of selected day
             },
             eventMouseover : function(event, jsEvent, view) {
             }

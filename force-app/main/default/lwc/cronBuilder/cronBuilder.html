@@ -1,0 +1,38 @@
+<template>
+    <lightning-card>
+        <lightning-layout multiple-rows="true">
+
+            <lightning-layout-item size="4">
+                <lightning-radio-group name="frequencyRadio"
+                        label="Frequency"
+                        options={frequencyOptions}
+                        value={selectedFrequency}
+                        onchange={handleFrequencyChange}
+                        type="radio">
+                </lightning-radio-group>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="8">
+
+                <template if:true={showWeeklySelector}>
+                    <lightning-checkbox-group name="weeklyGroup"
+                            label="Recurs every week on"
+                            options={weeklySelectorOptions}
+                            onchange={handleWeeklySelectorChange}>
+                    </lightning-checkbox-group>
+                </template>
+
+                <template if:true={showMonthlySelector}>
+                    <lightning-combobox name="monthlySelector"
+                        label="Recurs every month on"
+                        value={selectedDayOfMonth}
+                        options={monthlySelectorOptions}
+                        onchange={handleMonthlySelectorChange} >
+                    </lightning-combobox>
+                </template>
+            </lightning-layout-item>
+
+
+        </lightning-layout>
+    </lightning-card>
+</template>
