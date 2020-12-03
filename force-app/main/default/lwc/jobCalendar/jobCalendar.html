@@ -15,16 +15,16 @@
         aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
         <div class="slds-modal__container">
             <header class="slds-modal__header">
-              <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Event Details</h2>
+              <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Job Details</h2>
             </header>
             <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
               
               <lightning-card  variant="Narrow">
                   <p class="slds-p-horizontal_small">
-                    Subject : {selectedEvent.title}
+                    Job Name : {selectedEvent.title}
                   </p>
                   <p class="slds-p-horizontal_small">
-                    Id : {selectedEvent.id}
+                    Job Id : {selectedEvent.id}
                   </p>
                   <p class="slds-p-horizontal_small">
                     StartDate : 
@@ -35,30 +35,30 @@
                     </lightning-formatted-date-time>
 
                   </p>
-                  <!-- <p class="slds-p-horizontal_small">
+                   <p class="slds-p-horizontal_small">
                     EndDate : 
                     <lightning-formatted-date-time 
                       value={selectedEvent.end}
                       year="2-digit" month="short" 
                       day="2-digit" weekday="long">
                     </lightning-formatted-date-time>
-                  </p> -->
-                  <p class="slds-p-horizontal_small">
-                    description : 
-                    {selectedEvent.description}
-                  </p>
-
-                  <div class="slds-p-around_medium lgc-bg">
-                   
-                    <lightning-button-icon icon-name="utility:delete"     alternative-text="Delete"    title="Delete" onclick={handleDelete}  ></lightning-button-icon>
-                    <lightning-button-icon icon-name="utility:pause"       alternative-text="Pause"      title="Pause" onclick={handlePause} ></lightning-button-icon>
+                  </p> 
+                  
+                  <div class="slds-grid slds-grid--align-spread">
+                    <div class="slds-col--padded"><lightning-button-icon icon-name="utility:pause"   variant="brand"    alternative-text="Pause"      title="Pause" onclick={handlePause} ></lightning-button-icon></div>
+                    <div class="slds-col--padded"><lightning-button-icon icon-name="utility:delete"  variant="brand"   alternative-text="Delete"    title="Delete" onclick={handleDelete}  ></lightning-button-icon></div>
                     
-                </div>
+                   
+                  </div>
+                  
               </lightning-card>
               
             </div>
             <footer class="slds-modal__footer">
-              <button class="slds-button slds-button_brand" onclick={closeModal}>Close</button>
+            
+            <button class="slds-button slds-button_brand" onclick={closeModal}>Close</button>
+              
+             
             </footer>
         </div>
       </section>

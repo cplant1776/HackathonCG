@@ -57,15 +57,16 @@ export default class ScheduleNewJobModal extends LightningElement {
             this.dispatchEvent(new ShowToastEvent({
                 title: 'Success',
                 message: 'Your job has been scheduled',
-                varient: 'success'
+                variant: 'success'
             }));
+            this.dispatchEvent(new CustomEvent('submitjob'));
         })
         .catch(error => {
             console.log(error);
             this.dispatchEvent(new ShowToastEvent({
                 title: 'An Error Occurred',
                 message: 'Error scheduling job: ' + error,
-                varient: 'error'
+                variant: 'error'
             }));
         })
     }

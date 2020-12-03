@@ -4,7 +4,7 @@ import { NavigationMixin } from 'lightning/navigation';
 
 import FullCalendarJS from '@salesforce/resourceUrl/FullCalendarJS';
 import DeleteCurrentJob from '@salesforce/apex/scheduledJobs.deleteJob';
-import PasueJob from '@salesforce/apex/scheduledJobs.PasueJob';
+import PauseJob from '@salesforce/apex/scheduledJobs.PauseJob';
 export default class JobCalendar extends LightningElement {
     @api scheduledJobs;
 
@@ -17,7 +17,7 @@ export default class JobCalendar extends LightningElement {
      *              container before doing anything else
      */
     renderedCallback() {
-        console.log('START renderedCallback');
+        console.log('Calendar renderedCallback');
         console.log(JSON.parse(JSON.stringify(this.scheduledJobs)));
         // Performs this operation only on first render
         if (this.fullCalendarJsInitialised) {
@@ -92,13 +92,13 @@ export default class JobCalendar extends LightningElement {
     setAllScheduledJobs() {
         // TODO: instead of mapping: loop through each job, do an inner loop through runtimes and create an event for each one
         //      that will also let us assign the same color to them.
-        this.allScheduledJobs = this.scheduledJobs.jobs.map(item => {
+        this.allScheduledJobs = this.scheduledJobs.map(item => {
             return {
                 id : item.details.Id,
                 editable : true,
                 title : item.details.CronJobDetail.Name,
                 start : item.details.NextFireTime,
-                end : item.details.NextFireTime,
+                end : item.details.EndTime,
                 description : 'placeholder description',
                 allDay : false,
                 extendedProps: {},
@@ -120,17 +120,43 @@ export default class JobCalendar extends LightningElement {
     handleDelete() {
 
     console.log("selectedEvent.id");
-    console.log(selectedEvent);
+    console.log(this.selectedEvent.id);
     
-    DeleteCurrentJob ({jobid:selectedEvent.id})
+
+    DeleteCurrentJob ({jobid:this.selectedEvent.id})
      .then(result => {
-        console.log("here");
+       
+        
+        const custEvent = new CustomEvent(
+            'refresh');
+        this.dispatchEvent(custEvent);
+       /* this.dispatchEvent(new ShowToastEvent({
+            title: 'Success',
+            message: 'Your job has been deleted',
+            variant: 'success'
+        }));*/
+        console.log("done");
         this.closeModal();
      })
      .catch(error => {})
     }
 
     handlePause(){
+        PauseJob ({jobids:this.selectedEvent.id})
+        .then(result => {
+
+           /* this.dispatchEvent(new ShowToastEvent({
+                title: 'Success',
+                message: 'Your job has been Paused',
+                variant: 'success'
+            }));*/
+           console.log("here");
+           const custEvent = new CustomEvent(
+               'refresh');
+           this.dispatchEvent(custEvent);
+           
+        })
+        .catch(error => {})
 
     }
 }

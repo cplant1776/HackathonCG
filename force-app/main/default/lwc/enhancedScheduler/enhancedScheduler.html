@@ -1,12 +1,13 @@
 <template>
+    
     <lightning-card title="Scheduled Jobs" icon-name="standard:event">
-
+ 
         <!-- <div class="slds-m-left_medium">
             <lightning-button variant="brand" label="Schedule New" title="Schedule New" onclick={handleCreateNewJob}></lightning-button>
         </div> -->
 
         <template if:true={scheduledJobs}>
-            <c-job-calendar scheduled-jobs={scheduledJobs}></c-job-calendar>
+            <c-job-calendar scheduled-jobs={scheduledJobs} onrefresh={handleRefreshJobs}></c-job-calendar>
         </template>
 
         <div class="slds-clearfix">
@@ -23,7 +24,8 @@
 
     <template if:true={showCreateModal}>
         <c-schedule-new-job-modal
-            onclosemodal={handleCloseCreateModal}>
+            onclosemodal={handleCloseCreateModal}
+            onsubmitjob={handleSubmitNewJob}>
         </c-schedule-new-job-modal>        
     </template>
   </template>
