@@ -65,15 +65,25 @@ public class scheduledJobs {
      }
     @AuraEnabled
     //Resume Job and delete it from the object records
-     public static void ResumeJob(string jobName,string CRON){
-         
-        job__C j = [SELECT id,Name,className__C from job__C WHERE Name=:jobName];
-         
-          Type classType = Type.forName(''+j.className__C+'');
-         schedulable newObj = (schedulable)classType.newInstance();
-       
-        System.schedule(jobName, CRON,newObj );
+     public static void ResumeJob(string jobName,string CRON,string jobid,string className){
+        
+
+      try {
+        job__C j = [SELECT id ,jobid__c FROM job__C WHERE jobid__c LIKE :jobid];
          delete j;
+         Type classType = Type.forName(''+className+'');
+         schedulable newObj = (schedulable)classType.newInstance();
+        string cjobid = System.schedule(jobName, CRON,newObj );
+          system.debug(cjobid);
+        } catch(Exception e) {
+       System.debug('The following exception has occurred: ' + e.getMessage());
+          System.abortJob(jobid);
+          Type classType = Type.forName(''+className+'');
+         schedulable newObj = (schedulable)classType.newInstance();
+        string cjobid = System.schedule(jobName, CRON,newObj );
+          }   
+         
+         
      }
     @AuraEnabled
      //delete a job
