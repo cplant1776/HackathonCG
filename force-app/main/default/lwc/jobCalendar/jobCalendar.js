@@ -1,4 +1,4 @@
-import { api, LightningElement } from 'lwc';
+import { api, LightningElement, wire } from 'lwc';
 import { loadScript, loadStyle } from 'lightning/platformResourceLoader';
 import { NavigationMixin } from 'lightning/navigation';
 
@@ -26,11 +26,34 @@ export default class JobCalendar extends LightningElement {
     selectedEvent;
     isRendered = false;
     showResumeModel = false;
-    jobName1;
-    classname1;
+    eventjobName;
+    eventclassName;
+    eventjobID;
+    
+    @wire(getApexClassName, {cronTrigCreatedDate: '$selectedEvent.extendedProps.createdDate'})
+    getClassName(response) {
+        if(response.data) {
+            console.log('Name from server:');
+            console.log(response.data);
+            this.eventclassName = response.data;
+            this.selectedEvent.extendedProps['apexClass'] = response.data;
+        }
+        if(response.error) {
+            console.log('Error fetching name:');
+            console.log(response.error);
+        }
+    }
 
     // private
     _scheduledJobs;
+
+    // get createDate() {
+    //     return String(this.selectedEvent.extendedProps.CreatedDate).replace('.000',''); //placeholder
+    // }
+
+    get runDate() {
+        return String(this.selectedEvent.start).replace('.000',''); //placeholder
+    }
 
     /**
      * @description Standard lifecyle method 'renderedCallback'
@@ -118,7 +141,7 @@ export default class JobCalendar extends LightningElement {
         //      that will also let us assign the same color to them.
         console.log(JSON.parse(JSON.stringify(this.scheduledJobs)));
         this.allScheduledJobs = this.scheduledJobs.map(item => {
-            let eventTitle = item.ApexClassName ? `(P) ${item.Name}` : item.Name;
+            let eventTitle = item.isPaused ? `(P) ${item.Name}` : item.Name;
             return {
                 id : item.Id,
                 editable : true,
@@ -127,10 +150,11 @@ export default class JobCalendar extends LightningElement {
                 end : item.EndTime,
                 description : 'placeholder description',
                 allDay : false,
-                extendedProps: {},
                 extendedProps : {
+                    CreatedBy : item.CreatedBy,
                     createdDate : item.CreatedDate,
-                    apexClass : item.ApexClassName
+                    apexClass : item.ApexClassName,
+                    isPaused: item.isPaused
                 },
                 // extendedProps : {
                 //   whoId : item.WhoId,
@@ -214,8 +238,17 @@ export default class JobCalendar extends LightningElement {
 
     handleShowResumeModel() {
         console.log('EnhancedScheduler :: handleShowCreateModal');
-        jobName1=this.selectedEvent.title;
-        classname1=this.selectedEvent.extendedProps.ApexClassName;
+        console.log(this.selectedEvent.extendedProps['apexClass']);
+        // console.log(this.selectedEvent.extendedProps);
+        console.log(JSON.parse(JSON.stringify(this.selectedEvent.extendedProps)));
+        this.eventjobName=this.selectedEvent.title;
+        this.eventjobID=this.selectedEvent.id;
+     
+
+        this.eventclassName =  this.selectedEvent.extendedProps.apexClass;
+        console.log(this.eventjobName);
+        console.log(this.eventjobID);
+        console.log(this.eventClassName);
         this.showResumeModel = true;
     }
 

@@ -1,17 +1,17 @@
 import { LightningElement, wire,api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
-import scheduleNewJob from '@salesforce/apex/scheduledJobs.scheduleJob';
+import scheduleNewJob from '@salesforce/apex/scheduledJobs.ResumeJob';
 
 export default class ScheduleNewJobModal extends LightningElement {
 
-    @api jobname;
-    @api selectedclass;
-   
+    @api jobName;
+    @api selectedClass;
+    @api jobId
 
     // Handlers
 
     handleJobNameChange(event) {
-        this.jobname = event.detail.value;
+        this.jobName = event.detail.value;
     }
 
     
@@ -25,9 +25,10 @@ export default class ScheduleNewJobModal extends LightningElement {
         console.log('ScheduleNewJobModal :: handleSubmitNewJob');
         let cronString = this.template.querySelector('c-cron-builder').generateCronString();
         let payload = {
-            jobName: this.jobname,
+            jobName: this.jobName,
             CRON: cronString,
-            className: this.selectedclass
+            className: this.selectedClass,
+            jobid : this.jobId
         };
         console.log(payload);
         scheduleNewJob(payload)

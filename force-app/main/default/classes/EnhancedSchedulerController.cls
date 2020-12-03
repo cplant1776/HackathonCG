@@ -24,12 +24,20 @@ public with sharing class EnhancedSchedulerController {
     }
 
     @AuraEnabled(cacheable=true)
+    // public static String getApexClassName(DateTime cronTrigCreatedDate) {
     public static String getApexClassName(DateTime cronTrigCreatedDate) {
        System.debug('START getApexClassName');
        System.debug(cronTrigCreatedDate);
-       AsyncApexJob targetJob = [SELECT Id, ApexClass.Name FROM AsyncApexJob WHERE CreatedDate = :cronTrigCreatedDate LIMIT 1];
-       System.debug(targetJob.ApexClass.Name);
-       return targetJob.ApexClass.Name;
+       if(cronTrigCreatedDate != null) {
+           try {
+                AsyncApexJob targetJob = [SELECT Id, ApexClass.Name FROM AsyncApexJob WHERE CreatedDate = :cronTrigCreatedDate LIMIT 1];
+                System.debug(targetJob.ApexClass.Name);
+                return targetJob.ApexClass.Name;
+           } catch (Exception e) {
+               return null;
+           }
+       }
+       return null;
     }
 
     public class ScheduledJobsResponse {

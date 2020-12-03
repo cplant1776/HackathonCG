@@ -44,7 +44,7 @@
                 <lightning-layout-item size="8" padding="around-small">
                   <lightning-input type="datetime"
                       label="Scheduled Run"
-                      value="2020-09-12T18:13:41Z"
+                      value={runDate}
                       read-only="true">
                   </lightning-input>
               </lightning-layout-item>
@@ -60,15 +60,20 @@
                     read-only="true">
                 </lightning-input>
               </lightning-layout-item>
+              <lightning-layout-item size="4"></lightning-layout-item>
+              <lightning-layout-item size="4"></lightning-layout-item>
+
 
               <lightning-layout-item size="8" padding="around-small">
                   <lightning-input type="datetime"
                       label="Created On"
-                      value={selectedEvent.extendedProps.CreatedDate}
+                      value="2020-09-12T18:13:41Z"
                       read-only="true">
                   </lightning-input>
               </lightning-layout-item>
-            
+            <!-- 2020-09-12T18:13:41Z -->
+            <!-- 2020-12-01T22:44:44.000Z -->
+
             </lightning-layout>
 
                   <!-- <p class="slds-p-horizontal_small">
@@ -96,11 +101,11 @@
                   </p>  -->
                   
                   <div class="slds-grid slds-grid--align-spread">
+
                     <div class="slds-col--padded"><lightning-button-icon icon-name="utility:pause"   variant="brand"    alternative-text="Pause"      title="Pause" onclick={handlePause} ></lightning-button-icon></div>
-                    <div class="slds-col--padded"><lightning-button-icon icon-name="utility:delete"  variant="brand"   alternative-text="Delete"    title="Delete" onclick={handleDelete}  ></lightning-button-icon></div>
-                    <div class="slds-col--padded"><lightning-button-icon icon-name="utility:warning"  variant="brand"   alternative-text="Resume"    title="Tester" onclick={handleShowResumeModel}  ></lightning-button-icon></div>
-                    
-                   
+                    <div class="slds-col--padded "><lightning-button-icon icon-name="utility:delete"   variant="destructive"  alternative-text="Delete"    title="Delete" onclick={handleDelete}  ></lightning-button-icon></div>
+                    <div class="slds-col--padded"><lightning-button-icon icon-name="utility:warning"  variant="success"   alternative-text="Resume"    title="Tester" onclick={handleShowResumeModel}  ></lightning-button-icon></div>
+
                   </div>
                   
               </lightning-card>
@@ -121,8 +126,9 @@
       <c-resume-Modal
           onclosemodal={handleCloseResumeModel}
           onsubmitjob={handleResumeJob}
-          job-name={jobName1}
-          selected-class={classname1}>
+          job-name={eventjobName}
+          selected-class={eventclassName}
+          job-id={eventjobID}>
       </c-resume-Modal>
              
   </template>

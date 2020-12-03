@@ -11,22 +11,29 @@
                 <div class="slds-m-around_medium">
                     <lightning-layout multiple-rows="true">
             
-                        <lightning-layout-item size="4" padding="around-small">
-                            <lightning-input type="text"
-                                label="Job Name"
-                                onchange={handleJobNameChange}
-                                value={jobname}>
-                            </lightning-input>
-                        </lightning-layout-item>
+                        <template if:true={jobName}>
+                            <lightning-layout-item size="4" padding="around-small">
+                                <lightning-input type="text"
+                                    label="Job Name"
+                                    onchange={handleJobNameChange}
+                                    value={jobName}>
+                                </lightning-input>
+                            </lightning-layout-item>
+                        </template>
+
             
-                      
+                        <template if:true={selectedClass}>
                             <lightning-layout-item size="4" padding="around-small">
                                 <lightning-input type="text"
                                 label="Class Name"
-                                value={selectedclass}></lightning-input>
+                                value={selectedClass}
+                                read-only="true">
+                            </lightning-input>
                             
                             </lightning-layout-item>
-                            <lightning-layout-item size="4"></lightning-layout-item>
+                        </template>
+                            
+                        <lightning-layout-item size="4"></lightning-layout-item>
                                 
                     </lightning-layout>
             
