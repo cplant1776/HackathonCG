@@ -15,7 +15,7 @@ public with sharing class EnhancedSchedulerController {
         List<CronTrigger> jobList = [SELECT Id, CronJobDetail.Name, CronJobDetailId, EndTime, CreatedDate,
                                             NextFireTime, PreviousFireTime, StartTime, State, TimesTriggered
                                     FROM CronTrigger];
-        List<job__c> pausedJobList = [SELECT Id, name ,jobid__c, className__C, Cron__C, NextFireTime__C FROM job__C ];
+        List<job__c> pausedJobList = [SELECT Id, name ,jobid__c, className__C, Cron__C, NextFireTime__C, CreatedDate FROM job__C ];
         // for(CronTrigger eachJob : jobList) {
         //     System.debug(eachJob);
         // }

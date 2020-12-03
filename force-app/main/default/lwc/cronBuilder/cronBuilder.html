@@ -33,30 +33,40 @@
                         onchange={handleMonthlySelectorChange} >
                     </lightning-combobox>
                 </template>
+
+                <template if:true={showSingleSelector}>
+                    <lightning-input type="date"
+                        label="Run once on"
+                        value={selectedSpecificDate}
+                        onchange={handleSpecificDateChange}>
+                    </lightning-input>
+                </template>
             </lightning-layout-item>
 
             <lightning-layout-item size="4"></lightning-layout-item>
 
             <!-- Row 2 -->
-            <lightning-layout-item size="4" padding="around-small">
-                <lightning-input type="date"
-                    name="startDate"
-                    label="Start Date"
-                    value={startDate}
-                    onchange={handleStartDateChange}>
-                </lightning-input>
-            </lightning-layout-item>
-
-            <!-- Row 3 -->
-            <lightning-layout-item size="4" padding="around-small">
-                <lightning-input type="date"
-                    name="endDate"
-                    label="End Date"
-                    value={endDate}
-                    onchange={handleEndDateChange}>
-                </lightning-input>
-            </lightning-layout-item>
-            <lightning-layout-item size="4"></lightning-layout-item>
+            <!-- <template if:false={showSingleSelector}> -->
+                <lightning-layout-item size="4" padding="around-small">
+                    <lightning-input type="date"
+                        name="startDate"
+                        label="Start Date"
+                        value={startDate}
+                        onchange={handleStartDateChange}>
+                    </lightning-input>
+                </lightning-layout-item>
+    
+                <!-- Row 3 -->
+                <lightning-layout-item size="4" padding="around-small">
+                    <lightning-input type="date"
+                        name="endDate"
+                        label="End Date"
+                        value={endDate}
+                        onchange={handleEndDateChange}>
+                    </lightning-input>
+                </lightning-layout-item>
+                <lightning-layout-item size="4"></lightning-layout-item>
+            <!-- </template> -->
 
             <!-- Row 4 -->
             <lightning-layout-item size="4" padding="around-small">
@@ -67,7 +77,7 @@
                     onchange={handleStartTimeChange}>
                 </lightning-input>
             </lightning-layout-item>
-            <!-- <lightning-layout-item size="8"></lightning-layout-item> -->
+            <lightning-layout-item size="8"></lightning-layout-item>
 
         </lightning-layout>
     </lightning-card>

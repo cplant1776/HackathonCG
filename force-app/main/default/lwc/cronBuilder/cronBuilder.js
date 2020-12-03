@@ -5,6 +5,7 @@ export default class CronBuilder extends LightningElement {
     selectedFrequency = 'weekly';
     selectedDaysOfWeek = ['MON'];
     selectedDayOfMonth = '1';
+    selectedSpecificDate = this.setInitialStartDate();
     startDate = this.setInitialStartDate();
     endDate = this.setInitialEndDate();
     startTime = '04:00:00.000Z';
@@ -53,6 +54,10 @@ export default class CronBuilder extends LightningElement {
         return this.selectedFrequency === 'monthly';
     }
 
+    get showSingleSelector() {
+        return this.selectedFrequency === 'single';
+    }
+
     get weeklySelectorOptions() {
         return [
             {label: 'Sunday', value: 'SUN'},
@@ -95,11 +100,14 @@ export default class CronBuilder extends LightningElement {
 
     handleEndDateChange(event) {
         this.endDate = event.detail.value;
-        console.log('end date: ' + event.detail.value);
     }
 
     handleStartTimeChange(event) {
         this.startTime = event.detail.value;
+    }
+
+    handleSpecificDateChange(event) {
+        this.selectedSpecificDate = event.detail.value;
     }
 
     // Utils
