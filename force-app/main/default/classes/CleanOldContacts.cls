@@ -1,6 +1,6 @@
 global class CleanOldContacts implements Schedulable{
     global void execute(SchedulableContext sc)
         {
-            System.debug('clean old contacts');
+            System.debug('clean old cases');
         }
 }

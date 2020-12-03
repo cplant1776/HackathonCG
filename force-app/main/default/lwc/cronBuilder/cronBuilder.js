@@ -28,6 +28,12 @@ export default class CronBuilder extends LightningElement {
                 case 'monthly':
                     cronString = `0 ${min} ${hr} ${this.selectedDayOfMonth} * ? *`;
                     return cronString;
+                case 'single':
+                    let [year, month, day] = this.selectedSpecificDate.split("-").map(eachPart => {
+                        return parseInt(eachPart).toString(); // trim leading 0s
+                    });
+                    cronString = `0 ${min} ${hr} ${day} ${month} ? ${year}`;
+                    return cronString;
             }
         } catch(err) {
             console.log(err);

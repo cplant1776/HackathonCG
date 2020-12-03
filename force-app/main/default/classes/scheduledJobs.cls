@@ -41,28 +41,27 @@ public class scheduledJobs {
         Type classType = Type.forName(''+className+'');
          schedulable newObj = (schedulable)classType.newInstance();
        
-        String ScheduledJobID=System.schedule(jobName, CRON,newObj );
-        CronTrigger job =  [SELECT ID,CronExpression,CronJobDetail.Name, CronJobDetailId, EndTime, NextFireTime, PreviousFireTime, StartTime, State, TimesTriggered FROM CronTrigger where Id = :ScheduledJobID];
-         job__C j = new job__C();
-         j.name = jobName;
-         j.className__C = className;
-         j.Cron__C=CRON;
-         j.NextFireTime__C=''+job.NextFireTime;
-         j.status__c='Running';
-         j.jobid__c=job.ID;
-         insert j;
-        system.debug(job);
+        System.schedule(jobName, CRON,newObj );
         
     }
      @AuraEnabled
     //Pause a job
-     public static void PauseJob(string jobids){
-      system.debug(jobids);
-      job__C j=[Select id,jobid__c,status__c from job__C where jobid__c=:jobids ];
-         j.status__c='paused';
-         system.debug(j);
-         update j;
-      System.abortJob(jobids);
+     public static void PauseJob(string jobid,DateTime cronTrigCreatedDate,string jobName,datetime NextFireTime ){
+      system.debug('here');
+      System.debug('NextFireTime: ' + NextFireTime);
+      AsyncApexJob targetJob = [SELECT Id, ApexClass.Name FROM AsyncApexJob WHERE CreatedDate = :cronTrigCreatedDate LIMIT 1];
+      
+       job__C j = new job__C();
+         j.name = jobName;
+         j.className__C = targetJob.ApexClass.Name;
+         //j.Cron__C=CRON;
+         j.NextFireTime__C=NextFireTime;
+         j.jobid__c=jobid;
+         insert j;
+        system.debug(j);
+       
+      System.abortJob(jobid);
+
      }
     @AuraEnabled
     //Resume Job and delete it from the object records
@@ -79,6 +78,13 @@ public class scheduledJobs {
     @AuraEnabled
      //delete a job
      public static void deleteJob(string jobid){
+         try {
+         job__C j = [SELECT id ,jobid__c FROM job__C WHERE jobid__c=:jobid];
+          delete j;
+         } catch(Exception e) {
+        System.debug('The following exception has occurred: ' + e.getMessage());
+           }     
+       
     System.abortJob(jobid);
          
      }

@@ -115,10 +115,11 @@ export default class JobCalendar extends LightningElement {
         //      that will also let us assign the same color to them.
         console.log(JSON.parse(JSON.stringify(this.scheduledJobs)));
         this.allScheduledJobs = this.scheduledJobs.map(item => {
+            let eventTitle = item.ApexClassName ? `(P) ${item.Name}` : item.Name;
             return {
                 id : item.Id,
                 editable : true,
-                title : item.Name,
+                title : eventTitle,
                 start : item.NextFireTime,
                 end : item.EndTime,
                 description : 'placeholder description',
@@ -183,7 +184,13 @@ export default class JobCalendar extends LightningElement {
 
     handlePause(){
         console.log('jobCalendar :: handlePause');
-        PauseJob ({jobids:this.selectedEvent.id})
+        console.log(this.selectedEvent);
+        console.log(this.selectedEvent.title);
+        PauseJob ({jobid :this.selectedEvent.id,
+            cronTrigCreatedDate: this.selectedEvent.extendedProps.createdDate,
+             jobName: this.selectedEvent.title,
+           NextFireTime : this.selectedEvent.start 
+        })
         .then(result => {
 
            /* this.dispatchEvent(new ShowToastEvent({
