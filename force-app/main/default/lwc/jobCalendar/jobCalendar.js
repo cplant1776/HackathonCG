@@ -6,18 +6,34 @@ import FullCalendarJS from '@salesforce/resourceUrl/FullCalendarJS';
 import DeleteCurrentJob from '@salesforce/apex/scheduledJobs.deleteJob';
 import PauseJob from '@salesforce/apex/scheduledJobs.PauseJob';
 export default class JobCalendar extends LightningElement {
-    @api scheduledJobs;
+    @api
+    get scheduledJobs() {
+        return this._scheduledJobs;
+    }
+    set scheduledJobs(value) {
+        let oldJobs = this._scheduledJobs;
+        this.setAttribute('scheduledJobs', value);
+        this._scheduledJobs = value;
+        if(this.isRendered){
+            this.setAllScheduledJobs();
+        }
+    }
 
     fullCalendarJsInitialised = false;
     allScheduledJobs = [];
     selectedEvent;
+    isRendered = false;
+
+    // private
+    _scheduledJobs;
+
     /**
      * @description Standard lifecyle method 'renderedCallback'
      *              Ensures that the page loads and renders the 
      *              container before doing anything else
      */
     renderedCallback() {
-        console.log('Calendar renderedCallback');
+        console.log('jobCalendar :: renderedCallback');
         console.log(JSON.parse(JSON.stringify(this.scheduledJobs)));
         // Performs this operation only on first render
         if (this.fullCalendarJsInitialised) {
@@ -53,6 +69,7 @@ export default class JobCalendar extends LightningElement {
      *              This is also where we load the Events data.
      */
     initialiseFullCalendarJs() {
+        console.log('jobCalendar :: initialiseFullCalendarJs');
         var that = this; // used to access class variables in our event callback
         const ele = this.template.querySelector('div.fullcalendarjs');
         $(ele).fullCalendar({
@@ -87,9 +104,11 @@ export default class JobCalendar extends LightningElement {
             eventMouseover : function(event, jsEvent, view) {
             }
         });
+        this.isRendered = true;
     }
 
     setAllScheduledJobs() {
+        console.log('jobCalendar :: setAllScheduledJobs');
         // TODO: instead of mapping: loop through each job, do an inner loop through runtimes and create an event for each one
         //      that will also let us assign the same color to them.
         this.allScheduledJobs = this.scheduledJobs.map(item => {
@@ -110,14 +129,28 @@ export default class JobCalendar extends LightningElement {
                 borderColor: "rgb(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + ")"
             };
             });
-            // Initialise the calendar configuration
-            this.initialiseFullCalendarJs();
+
+            if(this.isRendered) {
+                this.refreshCalendar();
+            }
+            else {
+                this.initialiseFullCalendarJs();
+            }
+    }
+
+    refreshCalendar() {
+        console.log('jobCalendar :: refreshCalendar');
+        const ele = this.template.querySelector('div.fullcalendarjs');
+        $(ele).fullCalendar('removeEvents');
+        $(ele).fullCalendar('addEventSource', this.allScheduledJobs);
+        $(ele).fullCalendar('rerenderEvents');
     }
 
     closeModal(){
         this.selectedEvent = undefined;
     }
     handleDelete() {
+    console.log('jobCalendar :: handleDelete');
 
     console.log("selectedEvent.id");
     console.log(this.selectedEvent.id);
@@ -142,6 +175,7 @@ export default class JobCalendar extends LightningElement {
     }
 
     handlePause(){
+        console.log('jobCalendar :: handlePause');
         PauseJob ({jobids:this.selectedEvent.id})
         .then(result => {
 

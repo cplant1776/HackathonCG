@@ -3,21 +3,9 @@ public class scheduledJobs {
     @AuraEnabled(cacheable=true)
     //get list of all jobs
     public static List<CronTrigger> getjobs ()
-    {  // List<CronTrigger> fullList = new List<CronTrigger>();
+    {  
         List<CronTrigger> cl = [SELECT ID,CronExpression,CronJobDetail.Name, CronJobDetailId, EndTime, NextFireTime, PreviousFireTime, StartTime, State, TimesTriggered FROM CronTrigger];
-      /*  for(CronTrigger c : cl)
-        {
-           String strTest =c.CronExpression;
-            system.debug(strTest);
-           String[] cron = strTest.split(' ');
-           string minutes = cron[0];
-           string hours = cron[1];
-           string dayOfMonth = cron[2];
-           string month = cron[3];
-           string dayOfWeek = cron[4];
-            system.debug(cron);
-        }
-        return fullList;*/
+     
         return cl;
     }
     @AuraEnabled(cacheable=true)
@@ -53,20 +41,28 @@ public class scheduledJobs {
         Type classType = Type.forName(''+className+'');
          schedulable newObj = (schedulable)classType.newInstance();
        
-        System.schedule(jobName, CRON,newObj );
+        String ScheduledJobID=System.schedule(jobName, CRON,newObj );
+        CronTrigger job =  [SELECT ID,CronExpression,CronJobDetail.Name, CronJobDetailId, EndTime, NextFireTime, PreviousFireTime, StartTime, State, TimesTriggered FROM CronTrigger where Id = :ScheduledJobID];
+         job__C j = new job__C();
+         j.name = jobName;
+         j.className__C = className;
+         j.Cron__C=CRON;
+         j.NextFireTime__C=''+job.NextFireTime;
+         j.status__c='Running';
+         j.jobid__c=job.ID;
+         insert j;
+        system.debug(job);
         
     }
      @AuraEnabled
     //Pause a job
-     public static void PasueJob(string jobid,string jobName,string className,string CronExpression,string NextFireTime ){
-    System.abortJob(jobid);
-         job__C j = new job__C();
-         j.name = jobName;
-         j.className__C = className;
-         j.Cron__C=CronExpression;
-         j.NextFireTime__C=NextFireTime;
-         insert j;
-         
+     public static void PauseJob(string jobids){
+      system.debug(jobids);
+      job__C j=[Select id,jobid__c,status__c from job__C where jobid__c=:jobids ];
+         j.status__c='paused';
+         system.debug(j);
+         update j;
+      System.abortJob(jobids);
      }
     @AuraEnabled
     //Resume Job and delete it from the object records
@@ -85,6 +81,10 @@ public class scheduledJobs {
      public static void deleteJob(string jobid){
     System.abortJob(jobid);
          
+     }
+
+     private static String getApexClassName(DateTime cronTrigCreatedDate) {
+
      }
     
 }
