@@ -20,7 +20,58 @@
             <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
               
               <lightning-card  variant="Narrow">
-                  <p class="slds-p-horizontal_small">
+
+                <lightning-layout multiple-rows="true">
+                  
+                  <lightning-layout-item size="4" padding="around-small">
+                    <lightning-input type="text"
+                        label="Job Name"
+                        value={selectedEvent.title}
+                        read-only="true">
+                    </lightning-input>
+                </lightning-layout-item>
+    
+                <lightning-layout-item size="4" padding="around-small">
+                    <lightning-input type="text"
+                        label="Job Id"
+                        value={selectedEvent.id}
+                        read-only="true">
+                    </lightning-input>
+                </lightning-layout-item>
+                <lightning-layout-item size="4"></lightning-layout-item>
+
+                <!-- Row 2 -->
+                <lightning-layout-item size="8" padding="around-small">
+                  <lightning-input type="datetime"
+                      label="Scheduled Run"
+                      value="2020-09-12T18:13:41Z"
+                      read-only="true">
+                  </lightning-input>
+              </lightning-layout-item>
+
+              <lightning-layout-item size="2"></lightning-layout-item>
+              <lightning-layout-item size="2"></lightning-layout-item>
+
+              <!-- Row 3 -->
+              <lightning-layout-item size="4" padding="around-small">
+                <lightning-input type="text"
+                    label="Submitted By"
+                    value={selectedEvent.extendedProps.CreatedBy}
+                    read-only="true">
+                </lightning-input>
+              </lightning-layout-item>
+
+              <lightning-layout-item size="8" padding="around-small">
+                  <lightning-input type="datetime"
+                      label="Created On"
+                      value={selectedEvent.extendedProps.CreatedDate}
+                      read-only="true">
+                  </lightning-input>
+              </lightning-layout-item>
+            
+            </lightning-layout>
+
+                  <!-- <p class="slds-p-horizontal_small">
                     Job Name : {selectedEvent.title}
                   </p>
                   <p class="slds-p-horizontal_small">
@@ -42,12 +93,12 @@
                       year="2-digit" month="short" 
                       day="2-digit" weekday="long">
                     </lightning-formatted-date-time>
-                  </p> 
+                  </p>  -->
                   
                   <div class="slds-grid slds-grid--align-spread">
                     <div class="slds-col--padded"><lightning-button-icon icon-name="utility:pause"   variant="brand"    alternative-text="Pause"      title="Pause" onclick={handlePause} ></lightning-button-icon></div>
                     <div class="slds-col--padded"><lightning-button-icon icon-name="utility:delete"  variant="brand"   alternative-text="Delete"    title="Delete" onclick={handleDelete}  ></lightning-button-icon></div>
-                    <div class="slds-col--padded"><lightning-button-icon icon-name="utility:warning"  variant="brand"   alternative-text="Tester"    title="Tester" onclick={handleTester}  ></lightning-button-icon></div>
+                    <div class="slds-col--padded"><lightning-button-icon icon-name="utility:warning"  variant="brand"   alternative-text="Resume"    title="Tester" onclick={handleShowResumeModel}  ></lightning-button-icon></div>
                     
                    
                   </div>
@@ -65,5 +116,15 @@
       </section>
       <div class="slds-backdrop slds-backdrop_open"></div>
     </template>
+
+    <template if:true={showResumeModel}>
+      <c-resume-Modal
+          onclosemodal={handleCloseResumeModel}
+          onsubmitjob={handleResumeJob}
+          job-name={jobName1}
+          selected-class={classname1}>
+      </c-resume-Modal>
+             
+  </template>
 
   </template>

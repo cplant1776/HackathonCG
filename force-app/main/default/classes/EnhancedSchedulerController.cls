@@ -12,10 +12,10 @@ public with sharing class EnhancedSchedulerController {
 
     @AuraEnabled(cacheable=true)
     public static ScheduledJobsResponse fetchAllScheduledJobs(){
-        List<CronTrigger> jobList = [SELECT Id, CronJobDetail.Name, CronJobDetailId, EndTime, CreatedDate,
+        List<CronTrigger> jobList = [SELECT Id, CronJobDetail.Name, CronJobDetailId, EndTime, CreatedDate, CreatedBy.Name,
                                             NextFireTime, PreviousFireTime, StartTime, State, TimesTriggered
                                     FROM CronTrigger];
-        List<job__c> pausedJobList = [SELECT Id, name ,jobid__c, className__C, Cron__C, NextFireTime__C, CreatedDate FROM job__C ];
+        List<job__c> pausedJobList = [SELECT Id, name ,jobid__c, className__C, Cron__C, NextFireTime__C, CreatedDate, Owner.Name FROM job__C ];
         // for(CronTrigger eachJob : jobList) {
         //     System.debug(eachJob);
         // }
@@ -67,6 +67,10 @@ public with sharing class EnhancedSchedulerController {
         @AuraEnabled
         public String ApexClassName;
         @AuraEnabled
+        public Boolean isPaused=false;
+        @AuraEnabled
+        public String CreatedBy;
+        @AuraEnabled
         public List<DateTime> runtimes;
 
         public ScheduledJob(CronTrigger passedJob) {
@@ -75,6 +79,7 @@ public with sharing class EnhancedSchedulerController {
             NextFireTime = passedJob.NextFireTime;
             EndTime = passedJob.EndTime;
             CreatedDate = passedJob.CreatedDate;
+            CreatedBy = passedJob.CreatedBy.Name;
             runTimes = calculateRunTimes();
         }
 
@@ -84,7 +89,9 @@ public with sharing class EnhancedSchedulerController {
             NextFireTime = passedPausedJob.NextFireTime__c;
             // EndTime = passedPausedJob.EndTime;
             CreatedDate = passedPausedJob.CreatedDate;
+            CreatedBy = passedPausedJob.Owner.Name;
             ApexClassName = passedPausedJob.className__C;
+            isPaused = True;
             runTimes = calculateRunTimes();
         }
 

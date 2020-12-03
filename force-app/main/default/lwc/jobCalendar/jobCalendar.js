@@ -25,6 +25,9 @@ export default class JobCalendar extends LightningElement {
     allScheduledJobs = [];
     selectedEvent;
     isRendered = false;
+    showResumeModel = false;
+    jobName1;
+    classname1;
 
     // private
     _scheduledJobs;
@@ -208,17 +211,25 @@ export default class JobCalendar extends LightningElement {
 
     }
 
-    handleTester() {
-        console.log('jobCalendar :: handleTester');
-        console.log(this.selectedEvent.extendedProps.createdDate);
-        getApexClassName({cronTrigCreatedDate: this.selectedEvent.extendedProps.createdDate})
-        .then(result => {
-            console.log('got apex name');
-            console.log(result);
-        })
-        .catch(error => {
-            console.log('error getting apex name');
-            console.log(error);
-        })
+
+    handleShowResumeModel() {
+        console.log('EnhancedScheduler :: handleShowCreateModal');
+        jobName1=this.selectedEvent.title;
+        classname1=this.selectedEvent.extendedProps.ApexClassName;
+        this.showResumeModel = true;
     }
+
+    handleCloseResumeModel() {
+        console.log('EnhancedScheduler :: handleCloseCreateModal');
+        this.showResumeModel = false;
+    }
+
+    handleResumeJob() {
+
+        const custEvent = new CustomEvent(
+            'refresh');
+        this.dispatchEvent(custEvent);
+
+    }
+
 }
