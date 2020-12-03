@@ -70,5 +70,11 @@ export default class ScheduleNewJobModal extends LightningElement {
             }));
         })
     }
+
+    handleTester() {
+        console.log('ScheduleNewJobModal :: handleTester');
+        let cronString = this.template.querySelector('c-cron-builder').generateCronString();
+        console.log('cronString: ' + cronString);
+    }
     
 }

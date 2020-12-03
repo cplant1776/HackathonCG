@@ -82,9 +82,5 @@ public class scheduledJobs {
     System.abortJob(jobid);
          
      }
-
-     private static String getApexClassName(DateTime cronTrigCreatedDate) {
-
-     }
     
 }

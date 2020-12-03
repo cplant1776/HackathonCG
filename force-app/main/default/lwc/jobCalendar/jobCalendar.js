@@ -5,6 +5,8 @@ import { NavigationMixin } from 'lightning/navigation';
 import FullCalendarJS from '@salesforce/resourceUrl/FullCalendarJS';
 import DeleteCurrentJob from '@salesforce/apex/scheduledJobs.deleteJob';
 import PauseJob from '@salesforce/apex/scheduledJobs.PauseJob';
+import getApexClassName from '@salesforce/apex/EnhancedSchedulerController.getApexClassName';
+
 export default class JobCalendar extends LightningElement {
     @api
     get scheduledJobs() {
@@ -111,16 +113,21 @@ export default class JobCalendar extends LightningElement {
         console.log('jobCalendar :: setAllScheduledJobs');
         // TODO: instead of mapping: loop through each job, do an inner loop through runtimes and create an event for each one
         //      that will also let us assign the same color to them.
+        console.log(JSON.parse(JSON.stringify(this.scheduledJobs)));
         this.allScheduledJobs = this.scheduledJobs.map(item => {
             return {
-                id : item.details.Id,
+                id : item.Id,
                 editable : true,
-                title : item.details.CronJobDetail.Name,
-                start : item.details.NextFireTime,
-                end : item.details.EndTime,
+                title : item.Name,
+                start : item.NextFireTime,
+                end : item.EndTime,
                 description : 'placeholder description',
                 allDay : false,
                 extendedProps: {},
+                extendedProps : {
+                    createdDate : item.CreatedDate,
+                    apexClass : item.ApexClassName
+                },
                 // extendedProps : {
                 //   whoId : item.WhoId,
                 //   whatId : item.WhatId
@@ -192,5 +199,19 @@ export default class JobCalendar extends LightningElement {
         })
         .catch(error => {})
 
+    }
+
+    handleTester() {
+        console.log('jobCalendar :: handleTester');
+        console.log(this.selectedEvent.extendedProps.createdDate);
+        getApexClassName({cronTrigCreatedDate: this.selectedEvent.extendedProps.createdDate})
+        .then(result => {
+            console.log('got apex name');
+            console.log(result);
+        })
+        .catch(error => {
+            console.log('error getting apex name');
+            console.log(error);
+        })
     }
 }
