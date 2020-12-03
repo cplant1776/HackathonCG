@@ -25,8 +25,7 @@ export default class CronBuilder extends LightningElement {
                     cronString = `0 ${min} ${hr} ? * ${daysOfWeek} *`;
                     return cronString;
                 case 'monthly':
-                    console.log(selectedDayOfMonth);
-                    cronString = `0 ${min} ${hr} ${this.selectedDayOfMonth} * ${daysOfWeek} *`;
+                    cronString = `0 ${min} ${hr} ${this.selectedDayOfMonth} * ? *`;
                     return cronString;
             }
         } catch(err) {
