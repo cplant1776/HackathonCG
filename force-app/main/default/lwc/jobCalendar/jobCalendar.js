@@ -29,6 +29,7 @@ export default class JobCalendar extends LightningElement {
     isRendered = false;
     showResumeModel = false;
     showDeleteModal = false;
+    showEventDetails = false;
     eventjobName;
     eventclassName;
     eventjobID;
@@ -133,6 +134,7 @@ export default class JobCalendar extends LightningElement {
             },
             eventClick: function(event, jsEvent, view) {
                 that.selectedEvent =  event;
+                that.showEventDetails = true;
                 console.log(that.selectedEvent.isPaused);
                 console.log('END eventClick');
             },
@@ -156,11 +158,11 @@ export default class JobCalendar extends LightningElement {
             let eventColor;
             switch(item.State) {
                 case 'WAITING':
-                    eventColor = 'rgb(0, 153, 255)'; // blue
+                    eventColor = 'rgb(0,0,139)'; // blue
                     break;
                 case 'PAUSED':
-                    // eventColor = 'rgb(255, 153, 0)';
-                    eventColor = 'rgb(117, 117, 117)'; // grey
+                     eventColor = 'rgb(210, 187, 25)';
+                    //eventColor = 'rgb(117, 117, 117)'; // grey
                     break;
                 default:
                     eventColor = 'rgb(117, 117, 117)'; // grey
@@ -206,14 +208,20 @@ export default class JobCalendar extends LightningElement {
     }
 
     closeModal(){
-        this.selectedEvent = undefined;
+        console.log('jobCalendar :: closeModal');
+        this.showEventDetails = false;
+        // this.selectedEvent = undefined;
     }
 
     handleShowDeleteModal() {
+        console.log('jobCalendar :: handleShowDeleteModal');
+        this.showEventDetails = false;
         this.showDeleteModal = true;
+        console.log('finish show delete modal');
     }
 
     handleCloseDeleteModal() {
+        console.log('jobCalendar :: handleCloseDeleteModal');
         this.showDeleteModal = false;
     }
 
@@ -272,6 +280,7 @@ export default class JobCalendar extends LightningElement {
         .catch(error => {})
         .finally(() => {
             this.selectedEvent = undefined;
+            this.showEventDetails = false;
         })
     }
 
@@ -301,6 +310,7 @@ export default class JobCalendar extends LightningElement {
          })
          .finally(() => {
              this.selectedEvent = undefined;
+             this.showEventDetails = false;
          })
     }
 
@@ -325,6 +335,7 @@ export default class JobCalendar extends LightningElement {
         console.log('EnhancedScheduler :: handleCloseCreateModal');
         this.showResumeModel = false;
         this.selectedEvent = undefined;
+        this.showEventDetails = false;
     }
 
     handleResumeJob() {
@@ -332,7 +343,6 @@ export default class JobCalendar extends LightningElement {
         const custEvent = new CustomEvent(
             'refresh');
         this.dispatchEvent(custEvent);
-
     }
 
 }
