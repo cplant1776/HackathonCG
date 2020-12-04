@@ -101,20 +101,28 @@ public class scheduledJobs {
 
     @AuraEnabled
      //delete a job
-     public static void deleteJob(string jobid){
-         try {
-         job__C j = [SELECT id ,jobid__c FROM job__C WHERE jobid__c=:jobid];
-          delete j;
-         } catch(Exception e) {
-        System.debug('The following exception has occurred: ' + e.getMessage());
-           }
+     public static void deleteJob(string jobid, Boolean isPaused){
+       System.debug('deleteJob');
+       System.debug(jobid);
+       System.debug(isPaused);
+        //  try {
+        //  job__C j = [SELECT id ,jobid__c FROM job__C WHERE jobid__c=:jobid];
+        //   delete j;
+        //  } catch(Exception e) {
+        // System.debug('The following exception has occurred: ' + e.getMessage());
+        //    }
                 
-           try {
-            System.abortJob(jobid);
-            } catch(Exception e) {
-           System.debug('The following exception has occurred: ' + e.getMessage());
-              }    
-    
+        //    try {
+        //     System.abortJob(jobid);
+        //     } catch(Exception e) {
+        //    System.debug('The following exception has occurred: ' + e.getMessage());
+        //       }    
+      if(isPaused) {
+        Database.delete(jobid);
+      }
+      else {
+        System.abortJob(jobId);
+      }
          
      }
     

@@ -28,6 +28,7 @@ export default class JobCalendar extends LightningElement {
     selectedEvent;
     isRendered = false;
     showResumeModel = false;
+    showDeleteModal = false;
     eventjobName;
     eventclassName;
     eventjobID;
@@ -207,17 +208,29 @@ export default class JobCalendar extends LightningElement {
     closeModal(){
         this.selectedEvent = undefined;
     }
-    handleDelete() {
+
+    handleShowDeleteModal() {
+        this.showDeleteModal = true;
+    }
+
+    handleCloseDeleteModal() {
+        this.showDeleteModal = false;
+    }
+
+    handleConfirmDelete() {
     console.log('jobCalendar :: handleDelete');
 
-    console.log("selectedEvent.id");
-    console.log(this.selectedEvent.id);
+    // console.log("selectedEvent.id");
+    // console.log(this.selectedEvent.id);
+    // console.log(JSON.parse(JSON.stringify(this.selectedEvent.extendedProps)));
     
+    let payload = {
+        jobid: this.selectedEvent.id,
+        isPaused: this.selectedEvent.extendedProps.isPaused
+    }
 
-    DeleteCurrentJob ({jobid:this.selectedEvent.id})
+    DeleteCurrentJob (payload)
      .then(result => {
-       
-        
         const custEvent = new CustomEvent(
             'refresh');
         this.dispatchEvent(custEvent);
@@ -228,6 +241,7 @@ export default class JobCalendar extends LightningElement {
         }));
         console.log("done");
         this.closeModal();
+        this.showDeleteModal = false;
      })
      .catch(error => {})
     }
@@ -293,9 +307,9 @@ export default class JobCalendar extends LightningElement {
 
     handleShowResumeModel() {
         console.log('EnhancedScheduler :: handleShowCreateModal');
-        console.log(this.selectedEvent.extendedProps['apexClass']);
+        // console.log(this.selectedEvent.extendedProps['apexClass']);
         // console.log(this.selectedEvent.extendedProps);
-        console.log(JSON.parse(JSON.stringify(this.selectedEvent.extendedProps)));
+        // console.log(JSON.parse(JSON.stringify(this.selectedEvent.extendedProps)));
         this.eventjobName=this.selectedEvent.title;
         this.eventjobID=this.selectedEvent.id;
      

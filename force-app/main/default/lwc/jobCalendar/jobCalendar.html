@@ -92,13 +92,13 @@
                 <div class="slds-float_left">
                   <lightning-button-group>
                     <template if:false={showResumeButton}>
-                      <lightning-button-icon icon-name="utility:pause"       alternative-text="Pause"      title="Pause" onclick={handlePause} ></lightning-button-icon>
+                      <lightning-button-icon icon-name="utility:pause" alternative-text="Pause" title="Pause" onclick={handlePause} ></lightning-button-icon>
                     </template>
                     <template if:true={showResumeButton}>
-                      <lightning-button-icon icon-name="utility:play"       alternative-text="Resume"      title="Pause" onclick={handleResume} ></lightning-button-icon>
+                      <lightning-button-icon icon-name="utility:play" alternative-text="Resume" title="Pause" onclick={handleResume} ></lightning-button-icon>
                     </template>
-                    <lightning-button-icon calss = "delete" icon-name="utility:delete"   variant="destructive"  alternative-text="Delete"    title="Delete" onclick={handleDelete}  ></lightning-button-icon>
-                    <lightning-button-icon icon-name="utility:clock"  variant="success"   alternative-text="reschedule"    title="reschedule" onclick={handleShowResumeModel}  ></lightning-button-icon>
+                    <lightning-button-icon calss = "delete" icon-name="utility:delete" variant="destructive"  alternative-text="Delete" title="Delete" onclick={handleShowDeleteModal}  ></lightning-button-icon>
+                    <lightning-button-icon icon-name="utility:clock"  variant="success" alternative-text="Reschedule" title="reschedule" onclick={handleShowResumeModel}  ></lightning-button-icon>
   
                   </lightning-button-group>
                 </div>
@@ -120,6 +120,13 @@
           selected-class={eventclassName}
           job-id={eventjobID}>
       </c-resume-Modal>
+
+      <template if:true={showDeleteModal}>
+        <c-delete-modal
+          onclosemodal={handleCloseDeleteModal}
+          onconfirm={handleConfirmDelete}>
+        </c-delete-modal>
+      </template>
              
   </template>
 
