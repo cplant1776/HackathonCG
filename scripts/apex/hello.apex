@@ -57,3 +57,11 @@ System.schedule('Clean Contacts', '0 0 5 24 FEB ? 2021', new CleanOldContacts())
 String cron = '0 55 9 ? DEC FRI 2020';
 FailsOnRun job = new FailsOnRun();
 System.schedule('Will Fail', cron, job);
+
+// 
+System.schedule('Update Case Owners', '0 0 4 5 JAN ? 2021', new Miko_Scheduled());
+System.schedule('Weekend Maintenance', '0 0 3 2 JAN ? 2021', new Miko_Scheduled());
+
+//
+MrBatchable myBatchObject = new MrBatchable();
+Id batchId = Database.executeBatch(myBatchObject);

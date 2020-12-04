@@ -162,8 +162,8 @@ export default class JobCalendar extends LightningElement {
                     eventColor = 'rgb(0,0,139)'; // blue
                     break;
                 case 'PAUSED':
-                     eventColor = 'rgb(210, 187, 25)';
-                    //eventColor = 'rgb(117, 117, 117)'; // grey
+                     //eventColor = 'rgb(255,255,0)';
+                    eventColor = 'rgb(117, 117, 117)'; // grey
                     break;
                 default:
                     eventColor = 'rgb(117, 117, 117)'; // grey
