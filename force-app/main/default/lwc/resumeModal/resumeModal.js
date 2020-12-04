@@ -6,7 +6,11 @@ export default class ScheduleNewJobModal extends LightningElement {
 
     @api jobName;
     @api selectedClass;
-    @api jobId
+    @api jobId;
+
+    get formattedJobName() {
+        return this.jobName.replace('(P) ', '');
+    }
 
     // Handlers
 
@@ -17,12 +21,12 @@ export default class ScheduleNewJobModal extends LightningElement {
     
 
     handleCloseModal() {
-        console.log('ScheduleNewJobModal :: handleCloseModal');
+        console.log('resumeModal :: handleCloseModal');
         this.dispatchEvent(new CustomEvent('closemodal'));
     }
 
     handleSubmitNewJob() {
-        console.log('ScheduleNewJobModal :: handleSubmitNewJob');
+        console.log('resumeModal :: handleSubmitNewJob');
         let cronString = this.template.querySelector('c-cron-builder').generateCronString();
         let payload = {
             jobName: this.jobName,
@@ -47,6 +51,9 @@ export default class ScheduleNewJobModal extends LightningElement {
                 message: 'Error scheduling job: ' + error,
                 variant: 'error'
             }));
+        })
+        .finally(() => {
+            this.dispatchEvent(new CustomEvent('closemodal'));
         })
     }
 

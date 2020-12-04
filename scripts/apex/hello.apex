@@ -51,3 +51,9 @@ for(CronTrigger eachJob : jobs) {
 System.schedule('Miko', '0 45 2 12 FEB ? 2021', new Miko_Scheduled());
 System.schedule('Clean CAses', '0 0 5 24 FEB ? 2021', new CleanOldCases());
 System.schedule('Clean Contacts', '0 0 5 24 FEB ? 2021', new CleanOldContacts());
+
+
+//
+String cron = '0 55 9 ? DEC FRI 2020';
+FailsOnRun job = new FailsOnRun();
+System.schedule('Will Fail', cron, job);

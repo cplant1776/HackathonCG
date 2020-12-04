@@ -93,9 +93,14 @@ public class scheduledJobs {
           delete j;
          } catch(Exception e) {
         System.debug('The following exception has occurred: ' + e.getMessage());
-           }     
-       
-    System.abortJob(jobid);
+           }
+                
+           try {
+            System.abortJob(jobid);
+            } catch(Exception e) {
+           System.debug('The following exception has occurred: ' + e.getMessage());
+              }    
+    
          
      }
     

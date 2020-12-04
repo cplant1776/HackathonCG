@@ -1,6 +1,7 @@
 import { api, LightningElement, wire } from 'lwc';
-import { loadScript, loadStyle } from 'lightning/platformResourceLoader';
+import { loadScript, loadStyle} from 'lightning/platformResourceLoader';
 import { NavigationMixin } from 'lightning/navigation';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 
 import FullCalendarJS from '@salesforce/resourceUrl/FullCalendarJS';
 import DeleteCurrentJob from '@salesforce/apex/scheduledJobs.deleteJob';
@@ -54,6 +55,11 @@ export default class JobCalendar extends LightningElement {
     get runDate() {
         return String(this.selectedEvent.start).replace('.000',''); //placeholder
     }
+
+    get showPauseButton() {
+        return this.selectedEvent.isPaused;
+    }
+    
 
     /**
      * @description Standard lifecyle method 'renderedCallback'
@@ -141,28 +147,41 @@ export default class JobCalendar extends LightningElement {
         //      that will also let us assign the same color to them.
         console.log(JSON.parse(JSON.stringify(this.scheduledJobs)));
         this.allScheduledJobs = this.scheduledJobs.map(item => {
-            let eventTitle = item.isPaused ? `(P) ${item.Name}` : item.Name;
+
+            // let eventTitle = item.isPaused ? `(P) ${item.Name}` : item.Name;
+            let eventColor;
+            switch(item.State) {
+                case 'WAITING':
+                    eventColor = 'rgb(0, 153, 255)'; // blue
+                    break;
+                case 'PAUSED':
+                    // eventColor = 'rgb(255, 153, 0)';
+                    eventColor = 'rgb(117, 117, 117)'; // grey
+                    break;
+                default:
+                    eventColor = 'rgb(117, 117, 117)'; // grey
+                    // eventColor = 'rgb(255, 153, 0)'; // orange
+
+            }
             return {
-                id : item.Id,
-                editable : true,
-                title : eventTitle,
-                start : item.NextFireTime,
-                end : item.EndTime,
-                description : 'placeholder description',
-                allDay : false,
-                extendedProps : {
-                    CreatedBy : item.CreatedBy,
-                    createdDate : item.CreatedDate,
-                    apexClass : item.ApexClassName,
-                    isPaused: item.isPaused
-                },
-                // extendedProps : {
-                //   whoId : item.WhoId,
-                //   whatId : item.WhatId
-                // },
-                backgroundColor: "rgb(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + ")",
-                borderColor: "rgb(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + ")"
-            };
+                    id : item.Id,
+                    editable : true,
+                    title : item.Name,
+                    start : item.NextFireTime,
+                    end : item.EndTime,
+                    description : 'placeholder description',
+                    allDay : false,
+                    extendedProps : {
+                        CreatedBy : item.CreatedBy,
+                        createdDate : item.CreatedDate,
+                        apexClass : item.ApexClassName,
+                        isPaused: item.isPaused
+                    },
+                    // backgroundColor: "rgb(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + ")",
+                    // borderColor: "rgb(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + ")"
+                    backgroundColor: eventColor,
+                    borderColor: 'rgb(0, 0, 0)'
+                };
             });
 
             if(this.isRendered) {
@@ -198,11 +217,11 @@ export default class JobCalendar extends LightningElement {
         const custEvent = new CustomEvent(
             'refresh');
         this.dispatchEvent(custEvent);
-       /* this.dispatchEvent(new ShowToastEvent({
+        this.dispatchEvent(new ShowToastEvent({
             title: 'Success',
             message: 'Your job has been deleted',
             variant: 'success'
-        }));*/
+        }));
         console.log("done");
         this.closeModal();
      })
@@ -220,11 +239,11 @@ export default class JobCalendar extends LightningElement {
         })
         .then(result => {
 
-           /* this.dispatchEvent(new ShowToastEvent({
+           this.dispatchEvent(new ShowToastEvent({
                 title: 'Success',
                 message: 'Your job has been Paused',
-                variant: 'success'
-            }));*/
+                variant: 'warning'
+            }));
            console.log("here");
            const custEvent = new CustomEvent(
                'refresh');
@@ -232,7 +251,14 @@ export default class JobCalendar extends LightningElement {
            
         })
         .catch(error => {})
+        .finally(() => {
+            this.selectedEvent = undefined;
+        })
+    }
 
+    handleResume() {
+        console.log('jobCalendar :: handleResume');
+        
     }
 
 
@@ -255,6 +281,7 @@ export default class JobCalendar extends LightningElement {
     handleCloseResumeModel() {
         console.log('EnhancedScheduler :: handleCloseCreateModal');
         this.showResumeModel = false;
+        this.selectedEvent = undefined;
     }
 
     handleResumeJob() {

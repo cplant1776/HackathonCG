@@ -19,7 +19,9 @@ public with sharing class EnhancedSchedulerController {
         // for(CronTrigger eachJob : jobList) {
         //     System.debug(eachJob);
         // }
-        ScheduledJobsResponse response = new ScheduledJobsResponse(jobList, pausedJobList);
+        ScheduledJobsResponse response = new ScheduledJobsResponse();
+        response.setScheduledJobs(jobList);
+        response.setPausedJobs(pausedJobList);
         return response;
     }
 
@@ -42,22 +44,34 @@ public with sharing class EnhancedSchedulerController {
 
     public class ScheduledJobsResponse {
         @AuraEnabled
-        public List<ScheduledJob> jobs;
+        public List<ScheduledJob> jobs = new List<ScheduledJob>();
 
-        public ScheduledJobsResponse(List<CronTrigger> passedJobs, List<job__c> passedPausedJobs) {
-            jobs = wrapJobs(passedJobs, passedPausedJobs);
+        public ScheduledJobsResponse() {
+            
         }
 
-        public List<ScheduledJob> wrapJobs(List<CronTrigger> passedJobs, List<job__c> passedPausedJobs) {
-            List<ScheduledJob> result = new List<ScheduledJob>();
+        // public List<ScheduledJob> wrapJobs(List<CronTrigger> passedJobs, List<job__c> passedPausedJobs) {
+        //     List<ScheduledJob> result = new List<ScheduledJob>();
 
+        //     for(CronTrigger eachJob : passedJobs) {
+        //         result.add(new ScheduledJob(eachJob));
+        //     }
+        //     for(job__c eachPausedJob : passedPausedJobs) {
+        //         result.add(new ScheduledJob(eachPausedJob));
+        //     }
+        //     return result;
+        // }
+
+        public void setScheduledJobs(List<CronTrigger> passedJobs) {
             for(CronTrigger eachJob : passedJobs) {
-                result.add(new ScheduledJob(eachJob));
+                jobs.add(new ScheduledJob(eachJob));
             }
+        }
+
+        public void setPausedJobs(List<job__c> passedPausedJobs) {
             for(job__c eachPausedJob : passedPausedJobs) {
-                result.add(new ScheduledJob(eachPausedJob));
+                jobs.add(new ScheduledJob(eachPausedJob));
             }
-            return result;
         }
     }
 
@@ -79,6 +93,8 @@ public with sharing class EnhancedSchedulerController {
         @AuraEnabled
         public String CreatedBy;
         @AuraEnabled
+        public String State;
+        @AuraEnabled
         public List<DateTime> runtimes;
 
         public ScheduledJob(CronTrigger passedJob) {
@@ -88,7 +104,8 @@ public with sharing class EnhancedSchedulerController {
             EndTime = passedJob.EndTime;
             CreatedDate = passedJob.CreatedDate;
             CreatedBy = passedJob.CreatedBy.Name;
-            runTimes = calculateRunTimes();
+            State = 'WAITING';
+            // runTimes = calculateRunTimes();
         }
 
         public ScheduledJob(job__c passedPausedJob) {
@@ -100,7 +117,8 @@ public with sharing class EnhancedSchedulerController {
             CreatedBy = passedPausedJob.Owner.Name;
             ApexClassName = passedPausedJob.className__C;
             isPaused = True;
-            runTimes = calculateRunTimes();
+            State = 'PAUSED';
+            // runTimes = calculateRunTimes();
         }
 
         private List<DateTime> calculateRunTimes() {

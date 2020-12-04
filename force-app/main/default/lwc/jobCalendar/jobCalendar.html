@@ -15,7 +15,7 @@
         aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
         <div class="slds-modal__container">
             <header class="slds-modal__header">
-              <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Job Details</h2>
+              <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Selected Job Details</h2>
             </header>
             <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
               
@@ -71,48 +71,38 @@
                       read-only="true">
                   </lightning-input>
               </lightning-layout-item>
-            <!-- 2020-09-12T18:13:41Z -->
-            <!-- 2020-12-01T22:44:44.000Z -->
 
             </lightning-layout>
 
-                  <!-- <p class="slds-p-horizontal_small">
-                    Job Name : {selectedEvent.title}
-                  </p>
-                  <p class="slds-p-horizontal_small">
-                    Job Id : {selectedEvent.id}
-                  </p>
-                  <p class="slds-p-horizontal_small">
-                    StartDate : 
-                    <lightning-formatted-date-time 
-                      value={selectedEvent.start}
-                      year="2-digit" month="short" 
-                      day="2-digit" weekday="long">
-                    </lightning-formatted-date-time>
-
-                  </p>
-                   <p class="slds-p-horizontal_small">
-                    EndDate : 
-                    <lightning-formatted-date-time 
-                      value={selectedEvent.end}
-                      year="2-digit" month="short" 
-                      day="2-digit" weekday="long">
-                    </lightning-formatted-date-time>
-                  </p>  -->
                   
-                  <div class="slds-grid slds-grid--align-spread">
+                  <!-- <div class="slds-grid slds-grid--align-spread">
 
-                    <div class="slds-col--padded"><lightning-button-icon icon-name="utility:pause"   variant="brand"    alternative-text="Pause"      title="Pause" onclick={handlePause} ></lightning-button-icon></div>
-                    <div class="slds-col--padded "><lightning-button-icon icon-name="utility:delete"   variant="destructive"  alternative-text="Delete"    title="Delete" onclick={handleDelete}  ></lightning-button-icon></div>
-                    <div class="slds-col--padded"><lightning-button-icon icon-name="utility:warning"  variant="success"   alternative-text="Resume"    title="Tester" onclick={handleShowResumeModel}  ></lightning-button-icon></div>
+                    <div class="slds-col--padded"><lightning-button-icon icon-name="utility:pause"       alternative-text="Pause"      title="Pause" onclick={handlePause} ></lightning-button-icon></div>
+                    <div class="slds-col--padded "><lightning-button-icon calss = "delete" icon-name="utility:delete"   variant="destructive"  alternative-text="Delete"    title="Delete" onclick={handleDelete}  ></lightning-button-icon></div>
+                    <div class="slds-col--padded"><lightning-button-icon icon-name="utility:clock"  variant="success"   alternative-text="reschedule"    title="reschedule" onclick={handleShowResumeModel}  ></lightning-button-icon></div>
 
-                  </div>
+                  </div> -->
                   
               </lightning-card>
               
             </div>
             <footer class="slds-modal__footer">
             
+              <div class="slds-clearfix">
+                <div class="slds-float_left">
+                  <lightning-button-group>
+                    <template if:true={showPauseButton}>
+                      <lightning-button-icon icon-name="utility:pause"       alternative-text="Pause"      title="Pause" onclick={handlePause} ></lightning-button-icon>
+                    </template>
+                    <template if:false={showPauseButton}>
+                      <lightning-button-icon icon-name="utility:play"       alternative-text="Resume"      title="Pause" onclick={handleResume} ></lightning-button-icon>
+                    </template>
+                    <lightning-button-icon calss = "delete" icon-name="utility:delete"   variant="destructive"  alternative-text="Delete"    title="Delete" onclick={handleDelete}  ></lightning-button-icon>
+                    <lightning-button-icon icon-name="utility:clock"  variant="success"   alternative-text="reschedule"    title="reschedule" onclick={handleShowResumeModel}  ></lightning-button-icon>
+  
+                  </lightning-button-group>
+                </div>
+              </div>
             <button class="slds-button slds-button_brand" onclick={closeModal}>Close</button>
               
              
