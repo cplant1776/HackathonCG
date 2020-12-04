@@ -91,10 +91,10 @@
               <div class="slds-clearfix">
                 <div class="slds-float_left">
                   <lightning-button-group>
-                    <template if:true={showPauseButton}>
+                    <template if:false={showResumeButton}>
                       <lightning-button-icon icon-name="utility:pause"       alternative-text="Pause"      title="Pause" onclick={handlePause} ></lightning-button-icon>
                     </template>
-                    <template if:false={showPauseButton}>
+                    <template if:true={showResumeButton}>
                       <lightning-button-icon icon-name="utility:play"       alternative-text="Resume"      title="Pause" onclick={handleResume} ></lightning-button-icon>
                     </template>
                     <lightning-button-icon calss = "delete" icon-name="utility:delete"   variant="destructive"  alternative-text="Delete"    title="Delete" onclick={handleDelete}  ></lightning-button-icon>

@@ -46,7 +46,7 @@ public class scheduledJobs {
     }
      @AuraEnabled
     //Pause a job
-     public static void PauseJob(string jobid,DateTime cronTrigCreatedDate,string jobName,datetime NextFireTime ){
+     public static void PauseJob(string jobid,DateTime cronTrigCreatedDate,string jobName,datetime NextFireTime, String CRON){
       system.debug('here');
       System.debug('NextFireTime: ' + NextFireTime);
       AsyncApexJob targetJob = [SELECT Id, ApexClass.Name FROM AsyncApexJob WHERE CreatedDate = :cronTrigCreatedDate LIMIT 1];
@@ -54,7 +54,7 @@ public class scheduledJobs {
        job__C j = new job__C();
          j.name = jobName;
          j.className__C = targetJob.ApexClass.Name;
-         //j.Cron__C=CRON;
+         j.Cron__C=CRON;
          j.NextFireTime__C=NextFireTime;
          j.jobid__c=jobid;
          insert j;
@@ -85,6 +85,20 @@ public class scheduledJobs {
          
          
      }
+
+    @AuraEnabled
+    public static void ResumePausedJob(Id pausedJobId) {
+      System.debug('ResumePausedJob: ' + pausedJobId);
+
+      job__c pausedJob = [SELECT Id, Name, ClassName__c, CRON__c
+                        FROM job__c WHERE Id = :pausedJobId LIMIT 1];
+      Type classType = Type.forName(''+pausedJob.ClassName__c+'');
+      schedulable newObj = (schedulable)classType.newInstance();
+      string cjobid = System.schedule(pausedJob.Name, pausedJob.CRON__c,newObj );
+
+      delete pausedJob;
+    }
+
     @AuraEnabled
      //delete a job
      public static void deleteJob(string jobid){

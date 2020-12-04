@@ -13,7 +13,7 @@ public with sharing class EnhancedSchedulerController {
     @AuraEnabled(cacheable=true)
     public static ScheduledJobsResponse fetchAllScheduledJobs(){
         List<CronTrigger> jobList = [SELECT Id, CronJobDetail.Name, CronJobDetailId, EndTime, CreatedDate, CreatedBy.Name,
-                                            NextFireTime, PreviousFireTime, StartTime, State, TimesTriggered
+                                            NextFireTime, PreviousFireTime, StartTime, State, TimesTriggered, CronExpression
                                     FROM CronTrigger];
         List<job__c> pausedJobList = [SELECT Id, name ,jobid__c, className__C, Cron__C, NextFireTime__C, CreatedDate, Owner.Name FROM job__C ];
         // for(CronTrigger eachJob : jobList) {
@@ -50,18 +50,6 @@ public with sharing class EnhancedSchedulerController {
             
         }
 
-        // public List<ScheduledJob> wrapJobs(List<CronTrigger> passedJobs, List<job__c> passedPausedJobs) {
-        //     List<ScheduledJob> result = new List<ScheduledJob>();
-
-        //     for(CronTrigger eachJob : passedJobs) {
-        //         result.add(new ScheduledJob(eachJob));
-        //     }
-        //     for(job__c eachPausedJob : passedPausedJobs) {
-        //         result.add(new ScheduledJob(eachPausedJob));
-        //     }
-        //     return result;
-        // }
-
         public void setScheduledJobs(List<CronTrigger> passedJobs) {
             for(CronTrigger eachJob : passedJobs) {
                 jobs.add(new ScheduledJob(eachJob));
@@ -95,6 +83,8 @@ public with sharing class EnhancedSchedulerController {
         @AuraEnabled
         public String State;
         @AuraEnabled
+        public String CronExpression;
+        @AuraEnabled
         public List<DateTime> runtimes;
 
         public ScheduledJob(CronTrigger passedJob) {
@@ -105,11 +95,13 @@ public with sharing class EnhancedSchedulerController {
             CreatedDate = passedJob.CreatedDate;
             CreatedBy = passedJob.CreatedBy.Name;
             State = 'WAITING';
+            CronExpression = passedJob.CronExpression;
             // runTimes = calculateRunTimes();
         }
 
         public ScheduledJob(job__c passedPausedJob) {
-            Id = passedPausedJob.jobid__c;
+            Id = passedPausedJob.Id;
+            // Id = passedPausedJob.jobid__c;
             Name = passedPausedJob.name;
             NextFireTime = passedPausedJob.NextFireTime__c;
             // EndTime = passedPausedJob.EndTime;

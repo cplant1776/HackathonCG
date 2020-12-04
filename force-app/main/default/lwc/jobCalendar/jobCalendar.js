@@ -6,6 +6,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import FullCalendarJS from '@salesforce/resourceUrl/FullCalendarJS';
 import DeleteCurrentJob from '@salesforce/apex/scheduledJobs.deleteJob';
 import PauseJob from '@salesforce/apex/scheduledJobs.PauseJob';
+import ResumePausedJob from '@salesforce/apex/scheduledJobs.ResumePausedJob';
 import getApexClassName from '@salesforce/apex/EnhancedSchedulerController.getApexClassName';
 
 export default class JobCalendar extends LightningElement {
@@ -56,8 +57,10 @@ export default class JobCalendar extends LightningElement {
         return String(this.selectedEvent.start).replace('.000',''); //placeholder
     }
 
-    get showPauseButton() {
-        return this.selectedEvent.isPaused;
+    get showResumeButton() {
+        console.log('showPauseButton');
+        console.log(JSON.parse(JSON.stringify(this.selectedEvent.extendedProps)));
+        return this.selectedEvent.extendedProps.isPaused;
     }
     
 
@@ -129,7 +132,7 @@ export default class JobCalendar extends LightningElement {
             },
             eventClick: function(event, jsEvent, view) {
                 that.selectedEvent =  event;
-                console.log(that.selectedEvent);
+                console.log(that.selectedEvent.isPaused);
                 console.log('END eventClick');
             },
             dayClick :function(date, jsEvent, view) {
@@ -175,7 +178,8 @@ export default class JobCalendar extends LightningElement {
                         CreatedBy : item.CreatedBy,
                         createdDate : item.CreatedDate,
                         apexClass : item.ApexClassName,
-                        isPaused: item.isPaused
+                        isPaused: item.isPaused,
+                        cronExpression : item.CronExpression
                     },
                     // backgroundColor: "rgb(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + ")",
                     // borderColor: "rgb(" + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + ")"
@@ -235,7 +239,8 @@ export default class JobCalendar extends LightningElement {
         PauseJob ({jobid :this.selectedEvent.id,
             cronTrigCreatedDate: this.selectedEvent.extendedProps.createdDate,
              jobName: this.selectedEvent.title,
-           NextFireTime : this.selectedEvent.start 
+           NextFireTime : this.selectedEvent.start,
+           CRON: this.selectedEvent.extendedProps.cronExpression
         })
         .then(result => {
 
@@ -258,7 +263,31 @@ export default class JobCalendar extends LightningElement {
 
     handleResume() {
         console.log('jobCalendar :: handleResume');
-        
+        console.log(this.selectedEvent.id);
+        let payload = {
+            pausedJobId: this.selectedEvent.id,
+            CRON: this.selectedEvent.extendedProps.cronExpression
+        }
+        ResumePausedJob(payload)
+        .then(result => {
+
+            this.dispatchEvent(new ShowToastEvent({
+                 title: 'Success',
+                 message: 'Your job has been Resumed',
+                 variant: 'success'
+             }));
+            const custEvent = new CustomEvent(
+                'refresh');
+            this.dispatchEvent(custEvent);
+            
+         })
+         .catch(error => {
+             console.log('Error resuming paused job!');
+             console.log(error);
+         })
+         .finally(() => {
+             this.selectedEvent = undefined;
+         })
     }
 
 
