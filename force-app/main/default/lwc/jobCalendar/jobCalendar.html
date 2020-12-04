@@ -92,7 +92,7 @@
                 <div class="slds-float_left">
                   <lightning-button-group>
                     <template if:false={showResumeButton}>
-                      <lightning-button-icon icon-name="utility:pause" alternative-text="Pause" title="Pause" onclick={handlePause} ></lightning-button-icon>
+                      <lightning-button-icon icon-name="utility:pause" alternative-text="Pause" title="Pause" onclick={handleShowPauseModal} ></lightning-button-icon>
                     </template>
                     <template if:true={showResumeButton}>
                       <lightning-button-icon icon-name="utility:play" alternative-text="Resume" title="Pause" onclick={handleResume} ></lightning-button-icon>
@@ -129,6 +129,11 @@
       </c-delete-modal>
     </template>
 
-    
+    <template if:true={showPauseModal}>
+      <c-pause-modal
+        onclosemodal={handleClosePauseModal}
+        onconfirm={handleConfirmPause}>
+      </c-pause-modal>
+    </template>
 
   </template>

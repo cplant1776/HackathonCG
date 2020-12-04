@@ -65,11 +65,12 @@ public class scheduledJobs {
      }
     @AuraEnabled
     //Resume Job and delete it from the object records
-     public static void ResumeJob(string jobName,string CRON,string jobid,string className){
+     public static void ResumeJob(string jobName,string CRON,Id jobid,string className){
         
 
       try {
-        job__C j = [SELECT id ,jobid__c FROM job__C WHERE jobid__c LIKE :jobid];
+        // job__C j = [SELECT id ,jobid__c FROM job__C WHERE jobid__c LIKE :jobid];
+        job__C j = [SELECT id ,jobid__c FROM job__C WHERE Id = :jobid LIMIT 1];
          delete j;
          Type classType = Type.forName(''+className+'');
          schedulable newObj = (schedulable)classType.newInstance();

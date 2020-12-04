@@ -28,6 +28,15 @@ export default class ScheduleNewJobModal extends LightningElement {
         });
     }
 
+    get isSubmitEnabled() {
+        console.log('isSubmitEnabled');
+        console.log(this.jobName != undefined);
+        console.log(this.selectedClass != undefined);
+        console.log(this.jobName != undefined && this.selectedClass != undefined);
+
+        return this.jobName != undefined  && this.selectedClass != undefined;
+    }
+
     // Handlers
 
     handleJobNameChange(event) {

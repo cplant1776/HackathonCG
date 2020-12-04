@@ -29,6 +29,7 @@ export default class JobCalendar extends LightningElement {
     isRendered = false;
     showResumeModel = false;
     showDeleteModal = false;
+    showPauseModal = false;
     showEventDetails = false;
     eventjobName;
     eventclassName;
@@ -217,7 +218,6 @@ export default class JobCalendar extends LightningElement {
         console.log('jobCalendar :: handleShowDeleteModal');
         this.showEventDetails = false;
         this.showDeleteModal = true;
-        console.log('finish show delete modal');
     }
 
     handleCloseDeleteModal() {
@@ -254,7 +254,18 @@ export default class JobCalendar extends LightningElement {
      .catch(error => {})
     }
 
-    handlePause(){
+    handleShowPauseModal() {
+        console.log('jobCalendar :: handleShowPauseModal');
+        this.showEventDetails = false;
+        this.showPauseModal = true;
+    }
+
+    handleClosePauseModal() {
+        console.log('jobCalendar :: handleShowPauseModal');
+        this.showPauseModal = false;
+    }
+
+    handleConfirmPause(){
         console.log('jobCalendar :: handlePause');
         console.log(this.selectedEvent);
         console.log(this.selectedEvent.title);
@@ -281,6 +292,7 @@ export default class JobCalendar extends LightningElement {
         .finally(() => {
             this.selectedEvent = undefined;
             this.showEventDetails = false;
+            this.showPauseModal = false;
         })
     }
 

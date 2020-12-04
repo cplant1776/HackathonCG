@@ -43,9 +43,17 @@
                 <lightning-button variant="neutral" label="Cancel" title="cancel"
                                     onclick={handleCloseModal} class="slds-m-right_medium">
                 </lightning-button>
-                <lightning-button variant="brand" label="Submit" title="create"
+                <template if:true={isSubmitEnabled}>
+                    <lightning-button variant="brand" label="Submit" title="create"
                                     onclick={handleSubmitNewJob} class="slds-m-right_medium">
-                </lightning-button>
+                    </lightning-button>
+                </template>
+                <template if:false={isSubmitEnabled}>
+                    <lightning-button variant="brand" label="Submit" title="create"
+                                    onclick={handleSubmitNewJob} class="slds-m-right_medium" disabled>
+                    </lightning-button>
+                </template>
+
                 <!-- <lightning-button variant="destructive" label="Ignore Me" title="create"
                                     onclick={handleTester} class="slds-m-right_medium">
                 </lightning-button> -->
